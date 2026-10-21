@@ -38,7 +38,7 @@ table telemetria
 		mode: import
 		source =
 				let
-				    Source = Folder.Files("\\ger-sinet\telemetria"),
+				    Source = Folder.Files(CaminhoPasta),
 				    ExcelOnly = Table.SelectRows(Source, each [Extension] = ".xlsx"),
 				    Sorted = Table.Sort(ExcelOnly, {{"Date modified", Order.Descending}}),
 				    LatestFile = Sorted{0}[Content],

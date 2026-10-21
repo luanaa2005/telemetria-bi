@@ -13,6 +13,8 @@ annotation PBI_QueryOrder = ["telemetria","Visão Gerencial","Pessoas por víncu
 
 annotation PBI_ProTooling = ["DevMode"]
 
+ref expression CaminhoPasta
+
 ref table telemetria
 ref table 'Visão Gerencial'
 ref table 'Pessoas por vínculo'
