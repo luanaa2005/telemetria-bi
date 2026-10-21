@@ -2,15 +2,56 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "46260a02eea6d9368efe",
   "position": {
-    "x": 1078,
-    "y": 730,
+    "x": 780,
+    "y": 526,
     "z": 7001,
-    "height": 349,
-    "width": 204,
+    "height": 550,
+    "width": 450,
     "tabOrder": 7001
   },
   "visual": {
     "visualType": "donutChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AlocacaoPessoas"
+                    }
+                  },
+                  "Property": "Classificação"
+                }
+              },
+              "queryRef": "AlocacaoPessoas.Classificação",
+              "nativeQueryRef": "Classificação",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AlocacaoPessoas"
+                    }
+                  },
+                  "Property": "Total Licenças"
+                }
+              },
+              "queryRef": "AlocacaoPessoas.Total Licenças",
+              "nativeQueryRef": "Total Licenças"
+            }
+          ]
+        }
+      }
+    },
     "drillFilterOtherVisuals": true
   }
 }

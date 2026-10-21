@@ -3,10 +3,10 @@
   "name": "b7eb6202f4485491fdb4",
   "position": {
     "x": 0,
-    "y": 97.401998462720982,
+    "y": 116,
     "z": 0,
-    "height": 449.36170212765956,
-    "width": 1920,
+    "height": 400,
+    "width": 1700,
     "tabOrder": 0
   },
   "visual": {
@@ -107,6 +107,20 @@
                       "Entity": "Visão Gerencial"
                     }
                   },
+                  "Property": "U4 — Estagiários — licenças"
+                }
+              },
+              "queryRef": "Visão Gerencial.U4 — Estagiários — licenças",
+              "nativeQueryRef": "U4 — Estagiários — licenças"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
+                    }
+                  },
                   "Property": "Total de licenças"
                 }
               },
@@ -126,20 +140,6 @@
               },
               "queryRef": "Visão Gerencial.Situação dos servidores",
               "nativeQueryRef": "Situação dos servidores"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Visão Gerencial"
-                    }
-                  },
-                  "Property": "U4 — Estagiários — licenças"
-                }
-              },
-              "queryRef": "Visão Gerencial.U4 — Estagiários — licenças",
-              "nativeQueryRef": "U4 — Estagiários — licenças"
             },
             {
               "field": {

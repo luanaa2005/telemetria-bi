@@ -1,0 +1,66 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c3d4e5f6a7b8c9d0e1f2",
+  "position": {
+    "x": 0,
+    "y": 43,
+    "z": 8000,
+    "height": 63,
+    "width": 384,
+    "tabOrder": 8000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Visão Gerencial"
+                        }
+                      },
+                      "Property": "U1 — Autoridades — licenças"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Visão Gerencial.U1 — Autoridades — licenças)",
+              "nativeQueryRef": "Soma de U1 — Autoridades — licenças"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Aggregation": {
+                "Expression": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "Visão Gerencial"
+                      }
+                    },
+                    "Property": "U1 — Autoridades — licenças"
+                  }
+                },
+                "Function": 0
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

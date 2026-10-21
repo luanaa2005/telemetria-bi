@@ -3,14 +3,14 @@
   "name": "cdbaee2ba134e4234441",
   "position": {
     "x": 0,
-    "y": 570.45592705167178,
+    "y": 526,
     "z": 2000,
-    "height": 509.17933130699089,
-    "width": 1078.1762917933131,
+    "height": 550,
+    "width": 770,
     "tabOrder": 2000
   },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "stackedBarChart",
     "query": {
       "queryState": {
         "Category": {
@@ -44,14 +44,71 @@
                           "Entity": "Visão Gerencial"
                         }
                       },
-                      "Property": "Total de licenças"
+                      "Property": "U1 — Autoridades — licenças"
                     }
                   },
                   "Function": 0
                 }
               },
-              "queryRef": "CountNonNull(Visão Gerencial.Total de licenças)",
-              "nativeQueryRef": "Sum of Total de licenças"
+              "queryRef": "Sum(Visão Gerencial.U1 — Autoridades — licenças)",
+              "nativeQueryRef": "Soma de U1 — Autoridades — licenças"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Visão Gerencial"
+                        }
+                      },
+                      "Property": "U2 — Servidores — licenças"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Visão Gerencial.U2 — Servidores — licenças)",
+              "nativeQueryRef": "Soma de U2 — Servidores — licenças"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Visão Gerencial"
+                        }
+                      },
+                      "Property": "U3 — Terceiros — licenças"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Visão Gerencial.U3 — Terceiros — licenças)",
+              "nativeQueryRef": "Soma de U3 — Terceiros — licenças"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Visão Gerencial"
+                        }
+                      },
+                      "Property": "U4 — Estagiários — licenças"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Visão Gerencial.U4 — Estagiários — licenças)",
+              "nativeQueryRef": "Soma de U4 — Estagiários — licenças"
             }
           ]
         }

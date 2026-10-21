@@ -1,0 +1,75 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "d4e5f6a7b8c9d0e1f2a3",
+  "position": {
+    "x": 1240,
+    "y": 526,
+    "z": 9000,
+    "height": 550,
+    "width": 680,
+    "tabOrder": 9000
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AlocacaoPessoas"
+                    }
+                  },
+                  "Property": "Unidade"
+                }
+              },
+              "queryRef": "AlocacaoPessoas.Unidade",
+              "nativeQueryRef": "Unidade",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AlocacaoPessoas"
+                    }
+                  },
+                  "Property": "LicencasOciosas"
+                }
+              },
+              "queryRef": "AlocacaoPessoas.LicencasOciosas",
+              "nativeQueryRef": "LicencasOciosas"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "AlocacaoPessoas"
+                  }
+                },
+                "Property": "LicencasOciosas"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
