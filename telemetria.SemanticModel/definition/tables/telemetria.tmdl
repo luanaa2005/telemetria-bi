@@ -1,0 +1,52 @@
+table telemetria
+	lineageTag: 5a57490f-db46-417e-9251-b49805365b46
+
+	column Name
+		dataType: string
+		lineageTag: 62b61d83-9fec-4a39-ba59-9411d043a1ea
+		summarizeBy: none
+		sourceColumn: Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Item
+		dataType: string
+		lineageTag: c15cb8ee-c7f7-451b-a15a-704a12aaeddb
+		summarizeBy: none
+		sourceColumn: Item
+
+		annotation SummarizationSetBy = Automatic
+
+	column Kind
+		dataType: string
+		lineageTag: ae02a2e8-4699-43eb-bcec-57c11f67ebc8
+		summarizeBy: none
+		sourceColumn: Kind
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hidden
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: af4150a8-b212-4af3-94ad-8ab7c1a68405
+		summarizeBy: none
+		sourceColumn: Hidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition telemetria = m
+		mode: import
+		source =
+				let
+				    Source = Folder.Files("\\ger-sinet\telemetria"),
+				    ExcelOnly = Table.SelectRows(Source, each [Extension] = ".xlsx"),
+				    Sorted = Table.Sort(ExcelOnly, {{"Date modified", Order.Descending}}),
+				    LatestFile = Sorted{0}[Content],
+				    Workbook = Excel.Workbook(LatestFile, null, true)
+				in
+				    Workbook
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

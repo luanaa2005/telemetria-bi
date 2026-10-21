@@ -1,0 +1,66 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c1441abff7d1ce40abbc",
+  "position": {
+    "x": 538.35866261398178,
+    "y": 40.851063829787236,
+    "z": 5000,
+    "height": 55.440729483282674,
+    "width": 297.629179331307,
+    "tabOrder": 5000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Visão Gerencial"
+                        }
+                      },
+                      "Property": "U2 — Servidores — licenças"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Visão Gerencial.U2 — Servidores — licenças)",
+              "nativeQueryRef": "Soma de U2 — Servidores — licenças"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Aggregation": {
+                "Expression": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "Visão Gerencial"
+                      }
+                    },
+                    "Property": "U2 — Servidores — licenças"
+                  }
+                },
+                "Function": 0
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

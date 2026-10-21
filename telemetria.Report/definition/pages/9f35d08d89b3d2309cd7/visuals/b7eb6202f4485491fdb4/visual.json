@@ -1,0 +1,359 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "b7eb6202f4485491fdb4",
+  "position": {
+    "x": 0,
+    "y": 97.401998462720982,
+    "z": 0,
+    "height": 449.36170212765956,
+    "width": 1920,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
+                    }
+                  },
+                  "Property": "Nível"
+                }
+              },
+              "queryRef": "Visão Gerencial.Nível",
+              "nativeQueryRef": "Nível"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
+                    }
+                  },
+                  "Property": "Unidade"
+                }
+              },
+              "queryRef": "Visão Gerencial.Unidade",
+              "nativeQueryRef": "Unidade"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
+                    }
+                  },
+                  "Property": "Subunidade"
+                }
+              },
+              "queryRef": "Visão Gerencial.Subunidade",
+              "nativeQueryRef": "Subunidade"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
+                    }
+                  },
+                  "Property": "U1 — Autoridades — licenças"
+                }
+              },
+              "queryRef": "Visão Gerencial.U1 — Autoridades — licenças",
+              "nativeQueryRef": "U1 — Autoridades — licenças"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
+                    }
+                  },
+                  "Property": "U2 — Servidores — licenças"
+                }
+              },
+              "queryRef": "Visão Gerencial.U2 — Servidores — licenças",
+              "nativeQueryRef": "U2 — Servidores — licenças"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
+                    }
+                  },
+                  "Property": "U3 — Terceiros — licenças"
+                }
+              },
+              "queryRef": "Visão Gerencial.U3 — Terceiros — licenças",
+              "nativeQueryRef": "U3 — Terceiros — licenças"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
+                    }
+                  },
+                  "Property": "Total de licenças"
+                }
+              },
+              "queryRef": "Visão Gerencial.Total de licenças",
+              "nativeQueryRef": "Total de licenças"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
+                    }
+                  },
+                  "Property": "Situação dos servidores"
+                }
+              },
+              "queryRef": "Visão Gerencial.Situação dos servidores",
+              "nativeQueryRef": "Situação dos servidores"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
+                    }
+                  },
+                  "Property": "U4 — Estagiários — licenças"
+                }
+              },
+              "queryRef": "Visão Gerencial.U4 — Estagiários — licenças",
+              "nativeQueryRef": "U4 — Estagiários — licenças"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
+                    }
+                  },
+                  "Property": "Nível"
+                }
+              },
+              "queryRef": "Visão Gerencial.Nível",
+              "nativeQueryRef": "Nível"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Visão Gerencial"
+                  }
+                },
+                "Property": "Unidade"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 3,
+                      "Percent": -0.25
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "stylePreset": [
+        {
+          "properties": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "'AlternatingRowsNew'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "9f87aa53b07ca054187b",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Visão Gerencial"
+              }
+            },
+            "Property": "Nível"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "2dc2f832bf7c10c21bfb",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Visão Gerencial"
+              }
+            },
+            "Property": "Unidade"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "692564cd7c2cb29d40f0",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Visão Gerencial"
+              }
+            },
+            "Property": "Subunidade"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "54bdeb28ec4408f457d4",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Visão Gerencial"
+              }
+            },
+            "Property": "U1 — Autoridades — licenças"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "239a49fb9b619f13a9f2",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Visão Gerencial"
+              }
+            },
+            "Property": "U2 — Servidores — licenças"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "cd008fd12451f0e921e8",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Visão Gerencial"
+              }
+            },
+            "Property": "U3 — Terceiros — licenças"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "705fe13405ad7ba9ea6e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Visão Gerencial"
+              }
+            },
+            "Property": "Total de licenças"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "c040115e7f78c763265a",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Visão Gerencial"
+              }
+            },
+            "Property": "Situação dos servidores"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "dc0dba6c6324750f17ec",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Visão Gerencial"
+              }
+            },
+            "Property": "U4 — Estagiários — licenças"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

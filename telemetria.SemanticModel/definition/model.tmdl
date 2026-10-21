@@ -1,0 +1,24 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["telemetria","Visão Gerencial","Pessoas por vínculo","Alocação por unidade","Preços","AlocacaoPessoas"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table telemetria
+ref table 'Visão Gerencial'
+ref table 'Pessoas por vínculo'
+ref table 'Alocação por unidade'
+ref table Preços
+ref table AlocacaoPessoas
+
+ref cultureInfo en-US
+

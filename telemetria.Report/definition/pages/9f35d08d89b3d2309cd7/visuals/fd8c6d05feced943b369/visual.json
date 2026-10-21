@@ -1,0 +1,66 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "fd8c6d05feced943b369",
+  "position": {
+    "x": 835.98784194528878,
+    "y": 40.851063829787236,
+    "z": 6000,
+    "height": 55.440729483282674,
+    "width": 242.18844984802431,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Visão Gerencial"
+                        }
+                      },
+                      "Property": "U3 — Terceiros — licenças"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Visão Gerencial.U3 — Terceiros — licenças)",
+              "nativeQueryRef": "Soma de U3 — Terceiros — licenças"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Aggregation": {
+                "Expression": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "Visão Gerencial"
+                      }
+                    },
+                    "Property": "U3 — Terceiros — licenças"
+                  }
+                },
+                "Function": 0
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

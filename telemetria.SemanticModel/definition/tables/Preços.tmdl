@@ -1,0 +1,138 @@
+table Preços
+	lineageTag: 14d2e2e8-df67-4630-ad6c-edf0288bf5a8
+
+	column 'SKU técnico'
+		dataType: string
+		lineageTag: 63f9d422-f212-4f72-8ee8-73517c42d1af
+		summarizeBy: none
+		sourceColumn: SKU técnico
+
+		annotation SummarizationSetBy = Automatic
+
+	column Produto
+		dataType: string
+		lineageTag: bb2880a5-3fa1-43cc-98d4-cf2a52f3b12a
+		summarizeBy: none
+		sourceColumn: Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Preço anual por licença (R$)'
+		dataType: string
+		lineageTag: 89e3ad7f-5faf-4dae-9823-37a0b91c765c
+		summarizeBy: none
+		sourceColumn: Preço anual por licença (R$)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'R$/mês (proposta)'
+		dataType: string
+		lineageTag: 0c63be87-39c9-452e-a374-e8c6d63b3698
+		summarizeBy: none
+		sourceColumn: R$/mês (proposta)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Subitem da proposta'
+		dataType: string
+		lineageTag: 13ac0bd1-6546-4e1f-b0d4-b5ed5079f159
+		summarizeBy: none
+		sourceColumn: Subitem da proposta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SKU ID no tenant'
+		dataType: string
+		lineageTag: 0a43daec-a870-4be1-b864-dd849406eb2d
+		summarizeBy: none
+		sourceColumn: SKU ID no tenant
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column7
+		dataType: string
+		lineageTag: 1cfda344-3449-4c9e-859f-60a539eb30c1
+		summarizeBy: none
+		sourceColumn: Column7
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column8
+		dataType: string
+		lineageTag: ca4af591-d695-4528-a544-c3dae773c0a6
+		summarizeBy: none
+		sourceColumn: Column8
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column9
+		dataType: string
+		lineageTag: 694049fa-6d86-4b15-9159-3147f175a774
+		summarizeBy: none
+		sourceColumn: Column9
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column10
+		dataType: string
+		lineageTag: 16d4046e-f8f1-448e-ab2b-05c050922512
+		summarizeBy: none
+		sourceColumn: Column10
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column11
+		dataType: string
+		lineageTag: e30e6d50-47ab-4c77-9ce3-4f0354f423eb
+		summarizeBy: none
+		sourceColumn: Column11
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column12
+		dataType: string
+		lineageTag: aeb0801c-640c-467d-97cb-8986af6f73ef
+		summarizeBy: none
+		sourceColumn: Column12
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column13
+		dataType: string
+		lineageTag: e9e43e6c-bb13-4d80-b6d1-d24dcca80c4c
+		summarizeBy: none
+		sourceColumn: Column13
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column14
+		dataType: string
+		lineageTag: d06acd72-f49c-417d-9fa8-1f8784f16126
+		summarizeBy: none
+		sourceColumn: Column14
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column15
+		dataType: string
+		lineageTag: 271bd035-3085-4202-a080-09a66c5a2919
+		summarizeBy: none
+		sourceColumn: Column15
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Preços = m
+		mode: import
+		source =
+				let
+				    Source = telemetria,
+				    Sheet = Source{[Item="Preços",Kind="Sheet"]}[Data],
+				    SkipTitle = Table.Skip(Sheet, 3),
+				    Headers = Table.PromoteHeaders(SkipTitle, [PromoteAllScalars=true])
+				in
+				    Headers
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

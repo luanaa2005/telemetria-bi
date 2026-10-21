@@ -1,0 +1,4 @@
+# Power BI local/cache files — não versionar
+**/.pbi/cache.abf
+**/.pbi/localSettings.json
+**/.pbi/editorSettings.json

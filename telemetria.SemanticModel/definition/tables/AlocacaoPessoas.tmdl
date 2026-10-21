@@ -1,0 +1,148 @@
+table AlocacaoPessoas
+	lineageTag: 2ec14cbe-2d39-40ae-a6c7-0f6058a901de
+
+	measure 'Total Licenças' = COUNTROWS(AlocacaoPessoas)
+		formatString: 0
+		lineageTag: 821e6228-5cdb-4f56-a040-8f56df3355d0
+
+	measure 'Licenças Ativas' = CALCULATE(COUNTROWS(AlocacaoPessoas), AlocacaoPessoas[Classificação] = "Ativa")
+		formatString: 0
+		lineageTag: 88c75ba8-cbfb-461d-87e1-5f618f4dac07
+
+	measure LicencasOciosas = CALCULATE(COUNTROWS(AlocacaoPessoas), AlocacaoPessoas[Classificação] = "Ociosa")
+		formatString: 0
+		lineageTag: c46904ab-af5a-48ce-9bb2-6ed44def20b8
+
+	column Qualidade
+		dataType: string
+		lineageTag: 44890267-d530-4953-a57e-37225b40bd8c
+		summarizeBy: none
+		sourceColumn: Qualidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidade
+		dataType: string
+		lineageTag: a529d685-2789-40c2-a561-1a8a4ef272f5
+		summarizeBy: none
+		sourceColumn: Unidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subunidade
+		dataType: string
+		lineageTag: 82ba9d85-fff3-4212-b141-ec7ab20bf37f
+		summarizeBy: none
+		sourceColumn: Subunidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nome
+		dataType: string
+		lineageTag: 97cf765b-7ffd-4212-87a2-ebfaade50329
+		summarizeBy: none
+		sourceColumn: Nome
+
+		annotation SummarizationSetBy = Automatic
+
+	column UPN
+		dataType: string
+		lineageTag: daff1d06-5043-4f71-8fe4-3128db6d7253
+		summarizeBy: none
+		sourceColumn: UPN
+
+		annotation SummarizationSetBy = Automatic
+
+	column E5
+		dataType: int64
+		formatString: 0
+		lineageTag: f10ca396-f2fa-4899-806d-597f04c0a1f9
+		summarizeBy: none
+		sourceColumn: E5
+
+		annotation SummarizationSetBy = Automatic
+
+	column Copilot
+		dataType: int64
+		formatString: 0
+		lineageTag: 3faae891-c4cb-4127-9407-e50fbdb262be
+		summarizeBy: none
+		sourceColumn: Copilot
+
+		annotation SummarizationSetBy = Automatic
+
+	column Empresa
+		dataType: string
+		lineageTag: fde7a0be-b913-41a3-9a94-fb8ee0de61f0
+		summarizeBy: none
+		sourceColumn: Empresa
+
+		annotation SummarizationSetBy = Automatic
+
+	column Conta
+		dataType: string
+		lineageTag: 0742f4bb-9b94-4d40-9381-8dafbcd75dc1
+		summarizeBy: none
+		sourceColumn: Conta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Situação funcional'
+		dataType: string
+		lineageTag: 6c37225b-8c34-4491-8530-c39830124cd6
+		summarizeBy: none
+		sourceColumn: Situação funcional
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Situação original (Graph)'
+		dataType: string
+		lineageTag: 51565432-bb07-45e8-a05e-e5444a21390b
+		summarizeBy: none
+		sourceColumn: Situação original (Graph)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Revisão humana'
+		dataType: string
+		lineageTag: 80d91216-cab1-4f43-9184-19c2ccd21844
+		summarizeBy: none
+		sourceColumn: Revisão humana
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo funcional (Graph)'
+		dataType: string
+		lineageTag: 28e59f5f-daa3-41d7-8aef-922431a72392
+		summarizeBy: none
+		sourceColumn: Tipo funcional (Graph)
+
+		annotation SummarizationSetBy = Automatic
+
+	column Classificação
+		dataType: string
+		lineageTag: 421d825b-80cf-46c4-9759-5d80359fd998
+		summarizeBy: none
+		sourceColumn: Classificação
+
+		annotation SummarizationSetBy = Automatic
+
+	partition AlocacaoPessoas = m
+		mode: import
+		source = ```
+				let
+				    Source = telemetria,
+				    Sheet = Source{[Item="AlocacaoPessoas",Kind="Table"]}[Data],
+				    Typed = Table.TransformColumnTypes(Sheet,{{"E5", Int64.Type}, {"Copilot", Int64.Type}}),
+				    Classificacao = Table.AddColumn(Typed, "Classificação", each 
+				        if ([Situação funcional] = "INATIVO" or [Situação funcional] = "NAO_INFORMADO") and ([E5] = 1 or [Copilot] = 1) then "Ociosa" 
+				        else if ([E5] = 1 or [Copilot] = 1) and [Situação funcional] = "ATIVO" then "Ativa" 
+				        else "Sem licença")
+				in
+				    Classificacao
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,337 @@
+table 'Visão Gerencial'
+	lineageTag: 049a82d5-ae48-4aec-9a05-19f91fc5dd48
+
+	column Nível
+		dataType: string
+		lineageTag: 3857f418-f765-4834-9201-c778cd44f56e
+		summarizeBy: none
+		sourceColumn: Nível
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidade
+		dataType: string
+		lineageTag: 78f7f77c-27c8-41c9-8e32-167b6fc6925d
+		summarizeBy: none
+		sourceColumn: Unidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subunidade
+		dataType: string
+		lineageTag: c2490236-0fb9-40f1-a165-96e5dd0dffc9
+		summarizeBy: none
+		sourceColumn: Subunidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'U1 — Autoridades — licenças'
+		dataType: int64
+		formatString: 0
+		lineageTag: 7076e467-3cbf-458a-9cac-7f148c93da50
+		summarizeBy: sum
+		sourceColumn: U1 — Autoridades — licenças
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column5
+		dataType: string
+		lineageTag: 0f9b7d9f-5e3e-46ea-8884-5ed2ac416960
+		summarizeBy: none
+		sourceColumn: Column5
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column6
+		dataType: string
+		lineageTag: e1b9c654-d82e-4d3e-b792-6081be6a0a82
+		summarizeBy: none
+		sourceColumn: Column6
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column7
+		dataType: string
+		lineageTag: fd9b381f-5d6f-494c-bda4-a08ab1a41d5b
+		summarizeBy: none
+		sourceColumn: Column7
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'U2 — Servidores — licenças'
+		dataType: int64
+		formatString: 0
+		lineageTag: b0312049-3f46-4c07-bbbd-5a385545bf8e
+		summarizeBy: sum
+		sourceColumn: U2 — Servidores — licenças
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column9
+		dataType: string
+		lineageTag: 4e82b4a4-f6f3-4db0-aa6a-cd42a13e4033
+		summarizeBy: none
+		sourceColumn: Column9
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column10
+		dataType: string
+		lineageTag: f166c516-b002-473c-8337-42821ab345aa
+		summarizeBy: none
+		sourceColumn: Column10
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column11
+		dataType: string
+		lineageTag: 6e73ea06-05f5-4f23-b13a-91ef87b0b4ba
+		summarizeBy: none
+		sourceColumn: Column11
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'U3 — Terceiros — licenças'
+		dataType: int64
+		formatString: 0
+		lineageTag: 77e86cba-ca62-4678-beef-7c0817d29778
+		summarizeBy: sum
+		sourceColumn: U3 — Terceiros — licenças
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column13
+		dataType: string
+		lineageTag: 65c77b43-4823-497b-af93-c1c313a2eba6
+		summarizeBy: none
+		sourceColumn: Column13
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column14
+		dataType: string
+		lineageTag: 854e205c-9230-4969-9d47-efea8aee7bfb
+		summarizeBy: none
+		sourceColumn: Column14
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column15
+		dataType: string
+		lineageTag: 4aec6ff0-4bd8-4aca-8d86-83e12ef4cf86
+		summarizeBy: none
+		sourceColumn: Column15
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'U4 — Estagiários — licenças'
+		dataType: int64
+		formatString: 0
+		lineageTag: 0a43ec49-4fb6-4308-8c9d-ae9f6a178ae3
+		summarizeBy: sum
+		sourceColumn: U4 — Estagiários — licenças
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column17
+		dataType: string
+		lineageTag: dd1c9952-ad72-402f-8975-51d479525c39
+		summarizeBy: none
+		sourceColumn: Column17
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column18
+		dataType: string
+		lineageTag: f7a94cb0-360c-4372-84dd-54ebc75946b8
+		summarizeBy: none
+		sourceColumn: Column18
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column19
+		dataType: string
+		lineageTag: 1c95daaa-aceb-41e3-a3c0-ffe695c13b7f
+		summarizeBy: none
+		sourceColumn: Column19
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Exceção — Não classificado — licenças'
+		dataType: string
+		lineageTag: 775c2a7e-881e-41de-99a4-810906590541
+		summarizeBy: none
+		sourceColumn: Exceção — Não classificado — licenças
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column21
+		dataType: string
+		lineageTag: 300c7c20-1492-4629-919e-7bf608583591
+		summarizeBy: none
+		sourceColumn: Column21
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column22
+		dataType: string
+		lineageTag: 403bc685-a477-449c-bf39-684cc6631208
+		summarizeBy: none
+		sourceColumn: Column22
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column23
+		dataType: string
+		lineageTag: 31fa1a81-68d3-472c-9732-1b5e566882b3
+		summarizeBy: none
+		sourceColumn: Column23
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total de licenças'
+		dataType: int64
+		formatString: 0
+		lineageTag: 6458ad37-1735-4303-aaee-686f7c99992b
+		summarizeBy: sum
+		sourceColumn: Total de licenças
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Usuários distintos'
+		dataType: string
+		lineageTag: 6e22455a-5d70-475a-8d32-0b9eccd47400
+		summarizeBy: none
+		sourceColumn: Usuários distintos
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column26
+		dataType: string
+		lineageTag: 9c216fa6-dd0b-414f-9557-4044fa67c7df
+		summarizeBy: none
+		sourceColumn: Column26
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column27
+		dataType: string
+		lineageTag: ae21348a-5c61-449a-8b33-236c2022304e
+		summarizeBy: none
+		sourceColumn: Column27
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column28
+		dataType: string
+		lineageTag: 58f6e279-81a7-435b-bde9-7ae5fa9c711c
+		summarizeBy: none
+		sourceColumn: Column28
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column29
+		dataType: string
+		lineageTag: 96fca5e5-bbd7-4d81-9429-8f246b363dfc
+		summarizeBy: none
+		sourceColumn: Column29
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Situação dos servidores'
+		dataType: string
+		lineageTag: 860ed5cd-7877-4355-ad60-5cc4fd7fc1b7
+		summarizeBy: none
+		sourceColumn: Situação dos servidores
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column31
+		dataType: string
+		lineageTag: 25b77da7-dd96-4687-b246-9e33ae10a586
+		summarizeBy: none
+		sourceColumn: Column31
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column32
+		dataType: string
+		lineageTag: caa6aec9-9c2f-4ed6-9d62-3b5884238894
+		summarizeBy: none
+		sourceColumn: Column32
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Custo anual por qualidade (preços contratados)'
+		dataType: string
+		lineageTag: 29bd6d5d-5883-4a8c-9804-aaeb0650d18c
+		summarizeBy: none
+		sourceColumn: Custo anual por qualidade (preços contratados)
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column34
+		dataType: string
+		lineageTag: 86827b37-a976-4ba0-9f34-4ca8bf9dd2c8
+		summarizeBy: none
+		sourceColumn: Column34
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column35
+		dataType: string
+		lineageTag: f9da8656-6658-46db-ade2-31ad35901804
+		summarizeBy: none
+		sourceColumn: Column35
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column36
+		dataType: string
+		lineageTag: b130ebd7-95c6-4177-a299-eac70fbf8552
+		summarizeBy: none
+		sourceColumn: Column36
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column37
+		dataType: string
+		lineageTag: b79f8a08-bfde-4af4-9efc-0ee9f4d8b006
+		summarizeBy: none
+		sourceColumn: Column37
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Custo anual — estagiários + terceiros'
+		dataType: string
+		lineageTag: 17ce485d-192a-47ca-b5b6-17799d71c677
+		summarizeBy: none
+		sourceColumn: Custo anual — estagiários + terceiros
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Custo anual total'
+		dataType: string
+		lineageTag: 97b86737-f822-4afc-b994-ff965eda60e8
+		summarizeBy: none
+		sourceColumn: Custo anual total
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Visão Gerencial' = m
+		mode: import
+		source =
+				let
+				    Source = telemetria,
+				    Sheet = Source{[Item="Visão gerencial",Kind="Sheet"]}[Data],
+				    SkipTitle = Table.Skip(Sheet, 2),
+				    Headers = Table.PromoteHeaders(SkipTitle, [PromoteAllScalars=true]),
+				    RemoveSubHeader = Table.SelectRows(Headers, each [Nível] <> null),
+				    #"Changed Type" = Table.TransformColumnTypes(RemoveSubHeader,{{"Total de licenças", Int64.Type}, {"U1 — Autoridades — licenças", Int64.Type}, {"U2 — Servidores — licenças", Int64.Type}, {"U3 — Terceiros — licenças", Int64.Type}, {"U4 — Estagiários — licenças", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
