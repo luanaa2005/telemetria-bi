@@ -9,13 +9,14 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["telemetria","Visão Gerencial","Pessoas por vínculo","Alocação por unidade","Preços","AlocacaoPessoas"]
+annotation PBI_QueryOrder = ["telemetria","dim Nível","Visão Gerencial","Pessoas por vínculo","Alocação por unidade","Preços","AlocacaoPessoas"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
 ref expression CaminhoPasta
 
 ref table telemetria
+ref table 'dim Nível'
 ref table 'Visão Gerencial'
 ref table 'Pessoas por vínculo'
 ref table 'Alocação por unidade'

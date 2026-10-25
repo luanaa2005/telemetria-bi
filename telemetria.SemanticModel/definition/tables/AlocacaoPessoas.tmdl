@@ -13,6 +13,14 @@ table AlocacaoPessoas
 		formatString: 0
 		lineageTag: c46904ab-af5a-48ce-9bb2-6ed44def20b8
 
+	column Nível
+		dataType: string
+		lineageTag: c1d2e3f4-a5b6-7890-c1d2-e3f4a5b6c7d8
+		summarizeBy: none
+		sourceColumn: Nível
+
+		annotation SummarizationSetBy = Automatic
+
 	column Qualidade
 		dataType: string
 		lineageTag: 44890267-d530-4953-a57e-37225b40bd8c
@@ -142,7 +150,9 @@ table AlocacaoPessoas
 		source = ```
 				let
 				    Source = telemetria,
-				    Classificacao = Table.AddColumn(Source, "Classificação", each
+				    WithNivel = Table.AddColumn(Source, "Nível",
+				        each if [Unidade] = [Subunidade] then "UNIDADE" else "SUBUNIDADE"),
+				    Classificacao = Table.AddColumn(WithNivel, "Classificação", each
 				        if ([Situação funcional] = "INATIVO" or [Situação funcional] = "NAO_INFORMADO") and ([#"M365 E5"] = 1 or [Copilot] = 1) then "Ociosa"
 				        else if ([#"M365 E5"] = 1 or [Copilot] = 1) and [Situação funcional] = "ATIVO" then "Ativa"
 				        else "Sem licença")

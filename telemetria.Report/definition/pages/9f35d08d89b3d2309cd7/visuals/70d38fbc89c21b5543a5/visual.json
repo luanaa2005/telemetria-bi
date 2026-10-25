@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Visão Gerencial"
+                      "Entity": "dim Nível"
                     }
                   },
                   "Property": "Nível"
                 }
               },
-              "queryRef": "Visão Gerencial.Nível",
+              "queryRef": "dim Nível.Nível",
               "nativeQueryRef": "Nível",
               "active": true
             }
