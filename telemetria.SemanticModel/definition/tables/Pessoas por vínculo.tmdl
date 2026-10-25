@@ -1,6 +1,14 @@
 table 'Pessoas por vínculo'
 	lineageTag: a64207cb-bbb4-4b9f-bbf7-19d9a9a51e7d
 
+	column 'Data da coleta'
+		dataType: dateTime
+		lineageTag: 191370ab-bc2a-42db-b145-b9d8d9781ae9
+		summarizeBy: none
+		sourceColumn: Data da coleta
+
+		annotation SummarizationSetBy = Automatic
+
 	column Unidade
 		dataType: string
 		lineageTag: abf3ab83-2ede-486f-a861-377f52609434
@@ -106,71 +114,61 @@ table 'Pessoas por vínculo'
 		annotation SummarizationSetBy = Automatic
 
 	column Copilot
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: a0b94a64-df2a-4498-ad23-ea00f7daea34
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Copilot
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'M365 E5'
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: f350b072-9a4b-4b1c-9f9c-6d338129b26a
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: M365 E5
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'M365 F3'
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 577b5f12-c8a9-4d21-82c2-a4a1ede86a81
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: M365 F3
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'M365 F5 Security'
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 1230cb6b-de82-46ba-be82-73a0a69e5001
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: M365 F5 Security
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Total de licenças'
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 80de976e-d673-43ac-aa5b-c82921acbc48
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Total de licenças
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Custo anual'
-		dataType: string
-		lineageTag: 0ac4b70b-2482-4bbe-8ef2-5a6fb89aa469
-		summarizeBy: none
-		sourceColumn: Custo anual
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Data da coleta'
-		dataType: string
-		lineageTag: 191370ab-bc2a-42db-b145-b9d8d9781ae9
-		summarizeBy: none
-		sourceColumn: Data da coleta
 
 		annotation SummarizationSetBy = Automatic
 
 	partition 'Pessoas por vínculo' = m
 		mode: import
-		source =
+		source = ```
 				let
 				    Source = telemetria,
-				    Sheet = Source{[Item="Pessoas por vínculo",Kind="Sheet"]}[Data],
-				    SkipTitle = Table.Skip(Sheet, 2),
-				    Headers = Table.PromoteHeaders(SkipTitle, [PromoteAllScalars=true])
+				    WithTotal = Table.AddColumn(Source, "Total de licenças",
+				        each [#"M365 E5"] + [Copilot] + [#"M365 F3"] + [#"M365 F5 Security"],
+				        Int64.Type)
 				in
-				    Headers
+				    WithTotal
+				```
 
 	annotation PBI_NavigationStepName = Navigation
 

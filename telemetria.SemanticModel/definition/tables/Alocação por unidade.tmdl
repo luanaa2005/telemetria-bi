@@ -26,95 +26,77 @@ table 'Alocação por unidade'
 		annotation SummarizationSetBy = Automatic
 
 	column 'E5 total'
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 61b1d25a-4be5-462f-8dd2-b50e2c6aedf0
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: E5 total
 
 		annotation SummarizationSetBy = Automatic
 
+	column Copilot
+		dataType: int64
+		formatString: 0
+		lineageTag: 98d4fef3-7d1d-4195-aa79-f6552deb0a9e
+		summarizeBy: sum
+		sourceColumn: Copilot
+
+		annotation SummarizationSetBy = Automatic
+
 	column 'E5 terceiros'
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 6885f824-83c1-4aed-a978-ef13988caeac
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: E5 terceiros
 
 		annotation SummarizationSetBy = Automatic
 
 	column '% E5 em terceiros'
-		dataType: string
+		dataType: double
 		lineageTag: adea83d0-a41f-4cf2-8b5a-dd6ab9b8d0fb
 		summarizeBy: none
 		sourceColumn: % E5 em terceiros
 
 		annotation SummarizationSetBy = Automatic
 
-	column Copilot
-		dataType: string
-		lineageTag: 98d4fef3-7d1d-4195-aa79-f6552deb0a9e
-		summarizeBy: none
-		sourceColumn: Copilot
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Custo anual E5 + Copilot'
-		dataType: string
-		lineageTag: 53657b79-5002-44e6-bc74-7021dd790dae
-		summarizeBy: none
-		sourceColumn: Custo anual E5 + Copilot
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'E5 terceiros: conta desabilitada'
-		dataType: string
-		lineageTag: ff72a624-a8a0-476d-b69a-ddd1b42bc41a
-		summarizeBy: none
-		sourceColumn: E5 terceiros: conta desabilitada
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'E5 terceiros: situação INATIVO'
-		dataType: string
-		lineageTag: e1f6d6ef-8f8f-4bfe-ac2b-241ddac16fe9
-		summarizeBy: none
-		sourceColumn: E5 terceiros: situação INATIVO
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'E5 terceiros: situação ausente/outro'
-		dataType: string
-		lineageTag: c48debf6-d1ff-4e36-927a-6c3154604820
-		summarizeBy: none
-		sourceColumn: E5 terceiros: situação ausente/outro
-
-		annotation SummarizationSetBy = Automatic
-
 	column 'Pessoas E5/Copilot'
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 75bfd370-be56-46c5-b6dd-1b45dbd5b523
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Pessoas E5/Copilot
-
-		annotation SummarizationSetBy = Automatic
-
-	column Column13
-		dataType: string
-		lineageTag: 14f7b5d5-9372-4208-b919-f1c4a6a8ec63
-		summarizeBy: none
-		sourceColumn: Column13
 
 		annotation SummarizationSetBy = Automatic
 
 	partition 'Alocação por unidade' = m
 		mode: import
-		source =
+		source = ```
 				let
 				    Source = telemetria,
-				    Sheet = Source{[Item="Alocação por unidade",Kind="Sheet"]}[Data],
-				    SkipTitle = Table.Skip(Sheet, 4),
-				    Headers = Table.PromoteHeaders(SkipTitle, [PromoteAllScalars=true])
+				    WithNivel = Table.AddColumn(Source, "Nível",
+				        each if [Unidade] = [Subunidade] then "UNIDADE" else "SUBUNIDADE"),
+				    Grouped = Table.Group(WithNivel, {"Nível", "Unidade", "Subunidade"}, {
+				        {"E5 total",
+				            each List.Sum(_[#"M365 E5"]),
+				            Int64.Type},
+				        {"Copilot",
+				            each List.Sum(_[Copilot]),
+				            Int64.Type},
+				        {"E5 terceiros",
+				            each List.Sum(Table.SelectRows(_, each [Qualidade] = "TERCEIRIZADO")[#"M365 E5"]),
+				            Int64.Type},
+				        {"% E5 em terceiros",
+				            each if List.Sum(_[#"M365 E5"]) = 0 then 0.0
+				                 else List.Sum(Table.SelectRows(_, each [Qualidade] = "TERCEIRIZADO")[#"M365 E5"]) / List.Sum(_[#"M365 E5"]),
+				            type number},
+				        {"Pessoas E5/Copilot",
+				            each Table.RowCount(Table.SelectRows(_, each [#"M365 E5"] = 1 or [Copilot] = 1)),
+				            Int64.Type}
+				    })
 				in
-				    Headers
+				    Grouped
+				```
 
 	annotation PBI_NavigationStepName = Navigation
 

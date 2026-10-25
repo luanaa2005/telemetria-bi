@@ -53,12 +53,12 @@ table AlocacaoPessoas
 
 		annotation SummarizationSetBy = Automatic
 
-	column E5
+	column 'M365 E5'
 		dataType: int64
 		formatString: 0
 		lineageTag: f10ca396-f2fa-4899-806d-597f04c0a1f9
 		summarizeBy: none
-		sourceColumn: E5
+		sourceColumn: M365 E5
 
 		annotation SummarizationSetBy = Automatic
 
@@ -68,6 +68,24 @@ table AlocacaoPessoas
 		lineageTag: 3faae891-c4cb-4127-9407-e50fbdb262be
 		summarizeBy: none
 		sourceColumn: Copilot
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'M365 F3'
+		dataType: int64
+		formatString: 0
+		lineageTag: c1b2d3e4-f5a6-7890-b1c2-d3e4f5a67890
+		summarizeBy: none
+		sourceColumn: M365 F3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'M365 F5 Security'
+		dataType: int64
+		formatString: 0
+		lineageTag: d1b2c3e4-f5a6-7890-c1d2-e3f4a5b67890
+		summarizeBy: none
+		sourceColumn: M365 F5 Security
 
 		annotation SummarizationSetBy = Automatic
 
@@ -103,14 +121,6 @@ table AlocacaoPessoas
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Revisão humana'
-		dataType: string
-		lineageTag: 80d91216-cab1-4f43-9184-19c2ccd21844
-		summarizeBy: none
-		sourceColumn: Revisão humana
-
-		annotation SummarizationSetBy = Automatic
-
 	column 'Tipo funcional (Graph)'
 		dataType: string
 		lineageTag: 28e59f5f-daa3-41d7-8aef-922431a72392
@@ -132,11 +142,9 @@ table AlocacaoPessoas
 		source = ```
 				let
 				    Source = telemetria,
-				    Sheet = Source{[Item="AlocacaoPessoas",Kind="Table"]}[Data],
-				    Typed = Table.TransformColumnTypes(Sheet,{{"E5", Int64.Type}, {"Copilot", Int64.Type}}),
-				    Classificacao = Table.AddColumn(Typed, "Classificação", each 
-				        if ([Situação funcional] = "INATIVO" or [Situação funcional] = "NAO_INFORMADO") and ([E5] = 1 or [Copilot] = 1) then "Ociosa" 
-				        else if ([E5] = 1 or [Copilot] = 1) and [Situação funcional] = "ATIVO" then "Ativa" 
+				    Classificacao = Table.AddColumn(Source, "Classificação", each
+				        if ([Situação funcional] = "INATIVO" or [Situação funcional] = "NAO_INFORMADO") and ([#"M365 E5"] = 1 or [Copilot] = 1) then "Ociosa"
+				        else if ([#"M365 E5"] = 1 or [Copilot] = 1) and [Situação funcional] = "ATIVO" then "Ativa"
 				        else "Sem licença")
 				in
 				    Classificacao
