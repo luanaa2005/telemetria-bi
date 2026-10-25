@@ -3,9 +3,9 @@
   "name": "d4e5f6a7b8c9d0e1f2a3",
   "position": {
     "x": 1240,
-    "y": 526,
+    "y": 519,
     "z": 9000,
-    "height": 550,
+    "height": 558,
     "width": 680,
     "tabOrder": 9000
   },
@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "AlocacaoPessoas"
+                      "Entity": "Visão Gerencial"
                     }
                   },
                   "Property": "Unidade"
                 }
               },
-              "queryRef": "AlocacaoPessoas.Unidade",
+              "queryRef": "Visão Gerencial.Unidade",
               "nativeQueryRef": "Unidade",
               "active": true
             }
@@ -39,14 +39,14 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "AlocacaoPessoas"
+                      "Entity": "Visão Gerencial"
                     }
                   },
-                  "Property": "LicencasOciosas"
+                  "Property": "Ociosas"
                 }
               },
-              "queryRef": "AlocacaoPessoas.LicencasOciosas",
-              "nativeQueryRef": "LicencasOciosas"
+              "queryRef": "Sum(Visão Gerencial.Ociosas)",
+              "nativeQueryRef": "Ociosas"
             }
           ]
         }
@@ -58,10 +58,10 @@
               "Measure": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "AlocacaoPessoas"
+                    "Entity": "Visão Gerencial"
                   }
                 },
-                "Property": "LicencasOciosas"
+                "Property": "Ociosas"
               }
             },
             "direction": "Descending"

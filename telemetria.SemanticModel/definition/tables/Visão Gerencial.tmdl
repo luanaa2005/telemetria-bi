@@ -70,6 +70,15 @@ table 'Visão Gerencial'
 
 		annotation SummarizationSetBy = Automatic
 
+	column Ociosas
+		dataType: int64
+		formatString: 0
+		lineageTag: a1c2e3a4-b5d6-4e7f-8a9b-0c1d2e3f4a5b
+		summarizeBy: sum
+		sourceColumn: Ociosas
+
+		annotation SummarizationSetBy = Automatic
+
 	column 'Situação dos servidores'
 		dataType: string
 		lineageTag: 860ed5cd-7877-4355-ad60-5cc4fd7fc1b7
@@ -102,6 +111,11 @@ table 'Visão Gerencial'
 				            Int64.Type},
 				        {"Total de licenças",
 				            each List.Sum(_[_total]),
+				            Int64.Type},
+				        {"Ociosas",
+				            each Table.RowCount(Table.SelectRows(_, each
+				                ([Situação funcional] = "INATIVO" or [Situação funcional] = "NAO_INFORMADO") and
+				                ([#"M365 E5"] = 1 or [Copilot] = 1))),
 				            Int64.Type},
 				        {"Situação dos servidores",
 				            each if Table.RowCount(Table.SelectRows(_, each [Situação funcional] = "INATIVO" and [_total] > 0)) > 0 then "Atenção" else "OK",

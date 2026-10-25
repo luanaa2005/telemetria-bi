@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "dd4ee5ff601aa2bb3cc4",
+  "position": {
+    "x": 768,
+    "y": 101,
+    "z": 9004,
+    "height": 52,
+    "width": 384,
+    "tabOrder": 9004
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AlocacaoPessoas"
+                    }
+                  },
+                  "Property": "Total F3"
+                }
+              },
+              "queryRef": "AlocacaoPessoas.Total F3",
+              "nativeQueryRef": "Total F3"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

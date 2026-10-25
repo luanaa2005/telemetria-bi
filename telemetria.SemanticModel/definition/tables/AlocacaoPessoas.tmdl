@@ -13,6 +13,37 @@ table AlocacaoPessoas
 		formatString: 0
 		lineageTag: c46904ab-af5a-48ce-9bb2-6ed44def20b8
 
+	measure 'Total E5' = SUM(AlocacaoPessoas[M365 E5])
+		formatString: 0
+		lineageTag: a1b2c3d4-e5f6-7890-aa11-bb22cc33dd44
+
+	measure 'Total Copilot' = SUM(AlocacaoPessoas[Copilot])
+		formatString: 0
+		lineageTag: b2c3d4e5-f6a7-8901-bb22-cc33dd44ee55
+
+	measure 'Total F3' = SUM(AlocacaoPessoas[M365 F3])
+		formatString: 0
+		lineageTag: c3d4e5f6-a7b8-9012-cc33-dd44ee55ff66
+
+	measure 'Total F5 Security' = SUM(AlocacaoPessoas[M365 F5 Security])
+		formatString: 0
+		lineageTag: d4e5f6a7-b8c9-0123-dd44-ee55ff66aa77
+
+	measure '% Ativas' = DIVIDE([Licenças Ativas], [Licenças Ativas] + [LicencasOciosas])
+		formatString: 0%
+		lineageTag: e5f6a7b8-c9d0-1234-ee55-ff66aa77bb88
+
+	measure 'Data Coleta' = FORMAT(MAX(AlocacaoPessoas[Data da coleta]), "DD/MM/YYYY")
+		lineageTag: f6a7b8c9-d0e1-2345-ff66-aa77bb88cc99
+
+	column 'Data da coleta'
+		dataType: dateTime
+		lineageTag: a9b8c7d6-e5f4-3210-a9b8-c7d6e5f43210
+		summarizeBy: none
+		sourceColumn: Data da coleta
+
+		annotation SummarizationSetBy = Automatic
+
 	column Nível
 		dataType: string
 		lineageTag: c1d2e3f4-a5b6-7890-c1d2-e3f4a5b6c7d8
