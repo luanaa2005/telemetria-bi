@@ -49,88 +49,13 @@ table Preços
 
 		annotation SummarizationSetBy = Automatic
 
-	column Column7
-		dataType: string
-		lineageTag: 1cfda344-3449-4c9e-859f-60a539eb30c1
-		summarizeBy: none
-		sourceColumn: Column7
-
-		annotation SummarizationSetBy = Automatic
-
-	column Column8
-		dataType: string
-		lineageTag: ca4af591-d695-4528-a544-c3dae773c0a6
-		summarizeBy: none
-		sourceColumn: Column8
-
-		annotation SummarizationSetBy = Automatic
-
-	column Column9
-		dataType: string
-		lineageTag: 694049fa-6d86-4b15-9159-3147f175a774
-		summarizeBy: none
-		sourceColumn: Column9
-
-		annotation SummarizationSetBy = Automatic
-
-	column Column10
-		dataType: string
-		lineageTag: 16d4046e-f8f1-448e-ab2b-05c050922512
-		summarizeBy: none
-		sourceColumn: Column10
-
-		annotation SummarizationSetBy = Automatic
-
-	column Column11
-		dataType: string
-		lineageTag: e30e6d50-47ab-4c77-9ce3-4f0354f423eb
-		summarizeBy: none
-		sourceColumn: Column11
-
-		annotation SummarizationSetBy = Automatic
-
-	column Column12
-		dataType: string
-		lineageTag: aeb0801c-640c-467d-97cb-8986af6f73ef
-		summarizeBy: none
-		sourceColumn: Column12
-
-		annotation SummarizationSetBy = Automatic
-
-	column Column13
-		dataType: string
-		lineageTag: e9e43e6c-bb13-4d80-b6d1-d24dcca80c4c
-		summarizeBy: none
-		sourceColumn: Column13
-
-		annotation SummarizationSetBy = Automatic
-
-	column Column14
-		dataType: string
-		lineageTag: d06acd72-f49c-417d-9fa8-1f8784f16126
-		summarizeBy: none
-		sourceColumn: Column14
-
-		annotation SummarizationSetBy = Automatic
-
-	column Column15
-		dataType: string
-		lineageTag: 271bd035-3085-4202-a080-09a66c5a2919
-		summarizeBy: none
-		sourceColumn: Column15
-
-		annotation SummarizationSetBy = Automatic
-
 	partition Preços = m
 		mode: import
 		source =
-				let
-				    Source = telemetria,
-				    Sheet = Source{[Item="Preços",Kind="Sheet"]}[Data],
-				    SkipTitle = Table.Skip(Sheet, 3),
-				    Headers = Table.PromoteHeaders(SkipTitle, [PromoteAllScalars=true])
-				in
-				    Headers
+				#table(
+				    {"SKU técnico", "Produto", "Preço anual por licença (R$)", "R$/mês (proposta)", "Subitem da proposta", "SKU ID no tenant"},
+				    {}
+				)
 
 	annotation PBI_NavigationStepName = Navigation
 
