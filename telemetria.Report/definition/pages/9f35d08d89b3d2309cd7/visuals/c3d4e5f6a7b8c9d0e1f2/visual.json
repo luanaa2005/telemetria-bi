@@ -17,21 +17,16 @@
           "projections": [
             {
               "field": {
-                "Aggregation": {
+                "Measure": {
                   "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "Visão Gerencial"
-                        }
-                      },
-                      "Property": "U1 — Autoridades — licenças"
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
                     }
                   },
-                  "Function": 0
+                  "Property": "Autoridades"
                 }
               },
-              "queryRef": "Sum(Visão Gerencial.U1 — Autoridades — licenças)",
+              "queryRef": "Visão Gerencial.Autoridades",
               "nativeQueryRef": "Autoridades"
             }
           ]
@@ -41,18 +36,13 @@
         "sort": [
           {
             "field": {
-              "Aggregation": {
+              "Measure": {
                 "Expression": {
-                  "Column": {
-                    "Expression": {
-                      "SourceRef": {
-                        "Entity": "Visão Gerencial"
-                      }
-                    },
-                    "Property": "U1 — Autoridades — licenças"
+                  "SourceRef": {
+                    "Entity": "Visão Gerencial"
                   }
                 },
-                "Function": 0
+                "Property": "Autoridades"
               }
             },
             "direction": "Descending"

@@ -36,13 +36,18 @@
           "projections": [
             {
               "field": {
-                "Measure": {
+                "Aggregation": {
                   "Expression": {
-                    "SourceRef": {
-                      "Entity": "Visão Gerencial"
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Visão Gerencial"
+                        }
+                      },
+                      "Property": "Ociosas"
                     }
                   },
-                  "Property": "Ociosas"
+                  "Function": 0
                 }
               },
               "queryRef": "Sum(Visão Gerencial.Ociosas)",
@@ -55,13 +60,18 @@
         "sort": [
           {
             "field": {
-              "Measure": {
+              "Aggregation": {
                 "Expression": {
-                  "SourceRef": {
-                    "Entity": "Visão Gerencial"
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "Visão Gerencial"
+                      }
+                    },
+                    "Property": "Ociosas"
                   }
                 },
-                "Property": "Ociosas"
+                "Function": 0
               }
             },
             "direction": "Descending"

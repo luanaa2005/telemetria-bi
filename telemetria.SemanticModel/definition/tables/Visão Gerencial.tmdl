@@ -1,6 +1,26 @@
 table 'Visão Gerencial'
 	lineageTag: 049a82d5-ae48-4aec-9a05-19f91fc5dd48
 
+	measure Autoridades = SUM('Visão Gerencial'[U1 — Autoridades — licenças])
+		formatString: 0
+		lineageTag: aa01bb02-cc03-dd04-ee05-ff0607080910
+
+	measure Servidores = SUM('Visão Gerencial'[U2 — Servidores — licenças])
+		formatString: 0
+		lineageTag: bb01cc02-dd03-ee04-ff05-aa0607080910
+
+	measure Terceiros = SUM('Visão Gerencial'[U3 — Terceiros — licenças])
+		formatString: 0
+		lineageTag: cc01dd02-ee03-ff04-aa05-bb0607080910
+
+	measure Estagiários = SUM('Visão Gerencial'[U4 — Estagiários — licenças])
+		formatString: 0
+		lineageTag: dd01ee02-ff03-aa04-bb05-cc0607080910
+
+	measure 'Total Licenças' = SUM('Visão Gerencial'[Total de licenças])
+		formatString: 0
+		lineageTag: ee01ff02-aa03-bb04-cc05-dd0607080910
+
 	column Nível
 		dataType: string
 		lineageTag: 3857f418-f765-4834-9201-c778cd44f56e

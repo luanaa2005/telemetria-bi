@@ -17,21 +17,16 @@
           "projections": [
             {
               "field": {
-                "Aggregation": {
+                "Measure": {
                   "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "Visão Gerencial"
-                        }
-                      },
-                      "Property": "U3 — Terceiros — licenças"
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
                     }
                   },
-                  "Function": 0
+                  "Property": "Terceiros"
                 }
               },
-              "queryRef": "Sum(Visão Gerencial.U3 — Terceiros — licenças)",
+              "queryRef": "Visão Gerencial.Terceiros",
               "nativeQueryRef": "Terceiros"
             }
           ]
@@ -41,18 +36,13 @@
         "sort": [
           {
             "field": {
-              "Aggregation": {
+              "Measure": {
                 "Expression": {
-                  "Column": {
-                    "Expression": {
-                      "SourceRef": {
-                        "Entity": "Visão Gerencial"
-                      }
-                    },
-                    "Property": "U3 — Terceiros — licenças"
+                  "SourceRef": {
+                    "Entity": "Visão Gerencial"
                   }
                 },
-                "Function": 0
+                "Property": "Terceiros"
               }
             },
             "direction": "Descending"

@@ -17,21 +17,16 @@
           "projections": [
             {
               "field": {
-                "Aggregation": {
+                "Measure": {
                   "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "Visão Gerencial"
-                        }
-                      },
-                      "Property": "U4 — Estagiários — licenças"
+                    "SourceRef": {
+                      "Entity": "Visão Gerencial"
                     }
                   },
-                  "Function": 0
+                  "Property": "Estagiários"
                 }
               },
-              "queryRef": "Sum(Visão Gerencial.U4 — Estagiários — licenças)",
+              "queryRef": "Visão Gerencial.Estagiários",
               "nativeQueryRef": "Estagiários"
             }
           ]
@@ -41,18 +36,13 @@
         "sort": [
           {
             "field": {
-              "Aggregation": {
+              "Measure": {
                 "Expression": {
-                  "Column": {
-                    "Expression": {
-                      "SourceRef": {
-                        "Entity": "Visão Gerencial"
-                      }
-                    },
-                    "Property": "U4 — Estagiários — licenças"
+                  "SourceRef": {
+                    "Entity": "Visão Gerencial"
                   }
                 },
-                "Function": 0
+                "Property": "Estagiários"
               }
             },
             "direction": "Descending"
