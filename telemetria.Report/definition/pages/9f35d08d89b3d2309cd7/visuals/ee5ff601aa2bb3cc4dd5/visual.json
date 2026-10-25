@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "ee5ff601aa2bb3cc4dd5",
   "position": {
-    "x": 1152,
+    "x": 1026,
     "y": 101,
     "z": 9005,
     "height": 52,
-    "width": 384,
+    "width": 342,
     "tabOrder": 9005
   },
   "visual": {
@@ -33,6 +33,21 @@
         }
       }
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "cards": [
+        {
+          "properties": {
+            "showLabel": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

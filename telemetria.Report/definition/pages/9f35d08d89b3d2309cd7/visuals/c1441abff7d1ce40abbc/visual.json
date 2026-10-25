@@ -32,7 +32,7 @@
                 }
               },
               "queryRef": "Sum(Visão Gerencial.U2 — Servidores — licenças)",
-              "nativeQueryRef": "Soma de U2 — Servidores — licenças"
+              "nativeQueryRef": "Servidores"
             }
           ]
         }
@@ -61,6 +61,21 @@
         "isDefaultSort": true
       }
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "cards": [
+        {
+          "properties": {
+            "showLabel": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

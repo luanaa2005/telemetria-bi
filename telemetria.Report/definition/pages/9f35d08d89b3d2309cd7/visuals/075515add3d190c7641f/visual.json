@@ -32,7 +32,7 @@
                 }
               },
               "queryRef": "Sum(Visão Gerencial.U4 — Estagiários — licenças)",
-              "nativeQueryRef": "Soma de U4 — Estagiários — licenças"
+              "nativeQueryRef": "Estagiários"
             }
           ]
         }
@@ -61,7 +61,22 @@
         "isDefaultSort": true
       }
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "cards": [
+        {
+          "properties": {
+            "showLabel": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   },
   "filterConfig": {
     "filters": [

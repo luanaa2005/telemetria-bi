@@ -32,7 +32,7 @@
                 }
               },
               "queryRef": "Sum(Visão Gerencial.Total de licenças)",
-              "nativeQueryRef": "Soma de Total de licenças"
+              "nativeQueryRef": "Total de licenças"
             }
           ]
         }
@@ -61,6 +61,21 @@
         "isDefaultSort": true
       }
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "cards": [
+        {
+          "properties": {
+            "showLabel": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

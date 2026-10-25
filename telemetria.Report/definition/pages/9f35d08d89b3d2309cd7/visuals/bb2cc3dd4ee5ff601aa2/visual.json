@@ -6,7 +6,7 @@
     "y": 101,
     "z": 9002,
     "height": 52,
-    "width": 384,
+    "width": 342,
     "tabOrder": 9002
   },
   "visual": {
@@ -33,6 +33,21 @@
         }
       }
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "cards": [
+        {
+          "properties": {
+            "showLabel": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

@@ -33,6 +33,9 @@ table AlocacaoPessoas
 		formatString: 0%
 		lineageTag: e5f6a7b8-c9d0-1234-ee55-ff66aa77bb88
 
+	measure '% Ativas Color' = IF([% Ativas] >= 0.8, "#44C088", IF([% Ativas] >= 0.5, "#FAC775", "#ED7373"))
+		lineageTag: a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456
+
 	measure 'Data Coleta' = FORMAT(MAX(AlocacaoPessoas[Data da coleta]), "DD/MM/YYYY")
 		lineageTag: f6a7b8c9-d0e1-2345-ff66-aa77bb88cc99
 

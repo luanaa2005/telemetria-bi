@@ -32,7 +32,7 @@
                 }
               },
               "queryRef": "Sum(Visão Gerencial.U3 — Terceiros — licenças)",
-              "nativeQueryRef": "Soma de U3 — Terceiros — licenças"
+              "nativeQueryRef": "Terceiros"
             }
           ]
         }
@@ -61,6 +61,21 @@
         "isDefaultSort": true
       }
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "cards": [
+        {
+          "properties": {
+            "showLabel": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }
