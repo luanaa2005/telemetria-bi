@@ -140,20 +140,6 @@
               },
               "queryRef": "Visão Gerencial.Situação dos servidores",
               "nativeQueryRef": "Situação dos servidores"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Visão Gerencial"
-                    }
-                  },
-                  "Property": "Nível"
-                }
-              },
-              "queryRef": "Visão Gerencial.Nível",
-              "nativeQueryRef": "Nível"
             }
           ]
         }
