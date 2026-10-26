@@ -159,13 +159,13 @@ table telemetria
 				    LatestFile = Sorted{0}[Content],
 				    Csv = Csv.Document(LatestFile, [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.None]),
 				    Headers = Table.PromoteHeaders(Csv, [PromoteAllScalars=true]),
-				    Typed = Table.TransformColumnTypes(Headers, {
-				        {"Data da coleta", type datetime},
-		        {"Copilot", Int64.Type},
+				    TypedNums = Table.TransformColumnTypes(Headers, {
+				        {"Copilot", Int64.Type},
 				        {"M365 E5", Int64.Type},
 				        {"M365 F3", Int64.Type},
 				        {"M365 F5 Security", Int64.Type}
-				    })
+				    }),
+				    Typed = Table.TransformColumns(TypedNums, {{"Data da coleta", each DateTime.From(DateTimeZone.From(_)), type datetime}})
 				in
 				    Typed
 				```
