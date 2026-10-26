@@ -23,11 +23,11 @@
                       "Entity": "Visão Gerencial"
                     }
                   },
-                  "Property": "Total Licenças"
+                  "Property": "Total"
                 }
               },
-              "queryRef": "Visão Gerencial.Total Licenças",
-              "nativeQueryRef": "Total Licenças"
+              "queryRef": "Visão Gerencial.Total",
+              "nativeQueryRef": "Total"
             }
           ]
         }
@@ -42,7 +42,7 @@
                     "Entity": "Visão Gerencial"
                   }
                 },
-                "Property": "Total Licenças"
+                "Property": "Total"
               }
             },
             "direction": "Descending"

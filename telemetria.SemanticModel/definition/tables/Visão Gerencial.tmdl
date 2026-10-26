@@ -17,7 +17,7 @@ table 'Visão Gerencial'
 		formatString: 0
 		lineageTag: dd01ee02-ff03-aa04-bb05-cc0607080910
 
-	measure 'Total Licenças' = SUM('Visão Gerencial'[Total de licenças])
+	measure Total = SUM('Visão Gerencial'[Total de licenças])
 		formatString: 0
 		lineageTag: ee01ff02-aa03-bb04-cc05-dd0607080910
 
