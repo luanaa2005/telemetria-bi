@@ -109,41 +109,5 @@
         }
       ]
     }
-  },
-  "visualContainerObjects": {
-    "title": [
-      {
-        "properties": {
-          "show": {
-            "expr": {
-              "Literal": {
-                "Value": "true"
-              }
-            }
-          },
-          "text": {
-            "expr": {
-              "Literal": {
-                "Value": "'Classificação de licenças'"
-              }
-            }
-          },
-          "fontSize": {
-            "expr": {
-              "Literal": {
-                "Value": "11D"
-              }
-            }
-          },
-          "bold": {
-            "expr": {
-              "Literal": {
-                "Value": "false"
-              }
-            }
-          }
-        }
-      }
-    ]
   }
 }
