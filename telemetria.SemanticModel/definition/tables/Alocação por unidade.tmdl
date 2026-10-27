@@ -1,15 +1,15 @@
 table 'Alocação por unidade'
 	lineageTag: ea0641a8-db2f-4202-b657-e5ca666e8596
 
-	measure 'E5 Total' = CALCULATE(SUM('Alocação por unidade'[E5 total]), 'Alocação por unidade'[Nível] = "UNIDADE")
+	measure 'Total de E5' = CALCULATE(SUM('Alocação por unidade'[E5 total]), 'Alocação por unidade'[Nível] = "UNIDADE")
 		formatString: 0
 		lineageTag: a1b2c3d4-e5f6-7890-a1b2-c3d4e5f6a7b8
 
-	measure 'E5 Terceiros' = CALCULATE(SUM('Alocação por unidade'[E5 terceiros]), 'Alocação por unidade'[Nível] = "UNIDADE")
+	measure 'E5 em Terceiros' = CALCULATE(SUM('Alocação por unidade'[E5 terceiros]), 'Alocação por unidade'[Nível] = "UNIDADE")
 		formatString: 0
 		lineageTag: b2c3d4e5-f6a7-8901-b2c3-d4e5f6a7b8c9
 
-	measure '% E5 Terceiros' = DIVIDE([E5 Terceiros], [E5 Total])
+	measure '% E5 Terceiros' = DIVIDE([E5 em Terceiros], [Total de E5])
 		formatString: 0%
 		lineageTag: c3d4e5f6-a7b8-9012-c3d4-e5f6a7b8c9d0
 

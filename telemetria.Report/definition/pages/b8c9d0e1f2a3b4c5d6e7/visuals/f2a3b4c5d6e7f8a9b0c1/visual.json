@@ -23,11 +23,11 @@
                       "Entity": "Alocação por unidade"
                     }
                   },
-                  "Property": "E5 Total"
+                  "Property": "Total de E5"
                 }
               },
-              "queryRef": "Alocação por unidade.E5 Total",
-              "nativeQueryRef": "E5 Total"
+              "queryRef": "Alocação por unidade.Total de E5",
+              "nativeQueryRef": "Total de E5"
             }
           ]
         }
@@ -42,7 +42,7 @@
                     "Entity": "Alocação por unidade"
                   }
                 },
-                "Property": "E5 Total"
+                "Property": "Total de E5"
               }
             },
             "direction": "Descending"

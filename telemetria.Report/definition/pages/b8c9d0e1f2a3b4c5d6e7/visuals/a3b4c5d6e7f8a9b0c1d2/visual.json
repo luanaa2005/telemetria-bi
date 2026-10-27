@@ -23,11 +23,11 @@
                       "Entity": "Alocação por unidade"
                     }
                   },
-                  "Property": "E5 Terceiros"
+                  "Property": "E5 em Terceiros"
                 }
               },
-              "queryRef": "Alocação por unidade.E5 Terceiros",
-              "nativeQueryRef": "E5 Terceiros"
+              "queryRef": "Alocação por unidade.E5 em Terceiros",
+              "nativeQueryRef": "E5 em Terceiros"
             }
           ]
         }
@@ -42,7 +42,7 @@
                     "Entity": "Alocação por unidade"
                   }
                 },
-                "Property": "E5 Terceiros"
+                "Property": "E5 em Terceiros"
               }
             },
             "direction": "Descending"
