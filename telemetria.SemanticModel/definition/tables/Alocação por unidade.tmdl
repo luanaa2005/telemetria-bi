@@ -1,6 +1,29 @@
 table 'Alocação por unidade'
 	lineageTag: ea0641a8-db2f-4202-b657-e5ca666e8596
 
+	measure 'E5 Total' = CALCULATE(SUM('Alocação por unidade'[E5 total]), 'Alocação por unidade'[Nível] = "UNIDADE")
+		formatString: 0
+		lineageTag: a1b2c3d4-e5f6-7890-a1b2-c3d4e5f6a7b8
+
+	measure 'E5 Terceiros' = CALCULATE(SUM('Alocação por unidade'[E5 terceiros]), 'Alocação por unidade'[Nível] = "UNIDADE")
+		formatString: 0
+		lineageTag: b2c3d4e5-f6a7-8901-b2c3-d4e5f6a7b8c9
+
+	measure '% E5 Terceiros' = DIVIDE([E5 Terceiros], [E5 Total])
+		formatString: 0%
+		lineageTag: c3d4e5f6-a7b8-9012-c3d4-e5f6a7b8c9d0
+
+	measure '% E5 Terceiros Color' = IF([% E5 Terceiros] >= 0.5, "#ED7373", IF([% E5 Terceiros] >= 0.25, "#FAC775", "#44C088"))
+		lineageTag: d4e5f6a7-b8c9-0123-d4e5-f6a7b8c9d0e1
+
+	measure 'Copilot Total' = CALCULATE(SUM('Alocação por unidade'[Copilot]), 'Alocação por unidade'[Nível] = "UNIDADE")
+		formatString: 0
+		lineageTag: e5f6a7b8-c9d0-1234-e5f6-a7b8c9d0e1f2
+
+	measure 'Custo Anual Total' = CALCULATE(SUM('Alocação por unidade'[Custo anual E5 + Copilot]), 'Alocação por unidade'[Nível] = "UNIDADE")
+		formatString: R$ #,##0
+		lineageTag: f6a7b8c9-d0e1-2345-f6a7-b8c9d0e1f2a3
+
 	column Nível
 		dataType: string
 		lineageTag: 03968968-fa2a-4d01-a83b-451365e82371
@@ -60,6 +83,42 @@ table 'Alocação por unidade'
 
 		annotation SummarizationSetBy = Automatic
 
+	column 'Custo anual E5 + Copilot'
+		dataType: double
+		formatString: R$ #,##0
+		lineageTag: c1d2e3f4-a5b6-7890-c1d2-e3f4a5b6c7d8
+		summarizeBy: sum
+		sourceColumn: Custo anual E5 + Copilot
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'E5 terceiros: conta desabilitada'
+		dataType: int64
+		formatString: 0
+		lineageTag: d2e3f4a5-b6c7-8901-d2e3-f4a5b6c7d8e9
+		summarizeBy: sum
+		sourceColumn: E5 terceiros: conta desabilitada
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'E5 terceiros: situação INATIVO'
+		dataType: int64
+		formatString: 0
+		lineageTag: e3f4a5b6-c7d8-9012-e3f4-a5b6c7d8e9f0
+		summarizeBy: sum
+		sourceColumn: E5 terceiros: situação INATIVO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'E5 terceiros: situação ausente/outro'
+		dataType: int64
+		formatString: 0
+		lineageTag: f4a5b6c7-d8e9-0123-f4a5-b6c7d8e9f0a1
+		summarizeBy: sum
+		sourceColumn: E5 terceiros: situação ausente/outro
+
+		annotation SummarizationSetBy = Automatic
+
 	column 'Pessoas E5/Copilot'
 		dataType: int64
 		formatString: 0
@@ -92,13 +151,23 @@ table 'Alocação por unidade'
 				            type number},
 				        {"Pessoas E5/Copilot",
 				            each Table.RowCount(Table.SelectRows(_, each [#"M365 E5"] = 1 or [Copilot] = 1)),
+				            Int64.Type},
+				        {"E5 terceiros: conta desabilitada",
+				            each Table.RowCount(Table.SelectRows(_, each [Qualidade] = "TERCEIRIZADO" and [#"M365 E5"] = 1 and [Conta] = "Desabilitada")),
+				            Int64.Type},
+				        {"E5 terceiros: situação INATIVO",
+				            each Table.RowCount(Table.SelectRows(_, each [Qualidade] = "TERCEIRIZADO" and [#"M365 E5"] = 1 and [#"Situação funcional"] = "INATIVO")),
+				            Int64.Type},
+				        {"E5 terceiros: situação ausente/outro",
+				            each Table.RowCount(Table.SelectRows(_, each [Qualidade] = "TERCEIRIZADO" and [#"M365 E5"] = 1 and [#"Situação funcional"] <> "ATIVO" and [#"Situação funcional"] <> "INATIVO")),
 				            Int64.Type}
-				    })
+				    }),
+				    WithCusto = Table.AddColumn(Grouped, "Custo anual E5 + Copilot",
+				        each [#"E5 total"] * 3120.60 + [Copilot] * 2590.08, type number)
 				in
-				    Grouped
+				    WithCusto
 				```
 
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-

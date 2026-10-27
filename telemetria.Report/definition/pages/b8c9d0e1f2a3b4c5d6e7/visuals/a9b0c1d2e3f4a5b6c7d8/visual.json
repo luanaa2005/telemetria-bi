@@ -1,0 +1,284 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "a9b0c1d2e3f4a5b6c7d8",
+  "position": {
+    "x": 0,
+    "y": 527,
+    "z": 0,
+    "height": 553,
+    "width": 1920,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Alocação por unidade"
+                    }
+                  },
+                  "Property": "Nível"
+                }
+              },
+              "queryRef": "Alocação por unidade.Nível",
+              "nativeQueryRef": "Nível"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Alocação por unidade"
+                    }
+                  },
+                  "Property": "Unidade"
+                }
+              },
+              "queryRef": "Alocação por unidade.Unidade",
+              "nativeQueryRef": "Unidade"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Alocação por unidade"
+                    }
+                  },
+                  "Property": "Subunidade"
+                }
+              },
+              "queryRef": "Alocação por unidade.Subunidade",
+              "nativeQueryRef": "Subunidade"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Alocação por unidade"
+                        }
+                      },
+                      "Property": "E5 total"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Alocação por unidade.E5 total)",
+              "nativeQueryRef": "E5 total"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Alocação por unidade"
+                        }
+                      },
+                      "Property": "E5 terceiros"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Alocação por unidade.E5 terceiros)",
+              "nativeQueryRef": "E5 terceiros"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Alocação por unidade"
+                        }
+                      },
+                      "Property": "% E5 em terceiros"
+                    }
+                  },
+                  "Function": 3
+                }
+              },
+              "queryRef": "Average(Alocação por unidade.% E5 em terceiros)",
+              "nativeQueryRef": "% E5 em terceiros"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Alocação por unidade"
+                        }
+                      },
+                      "Property": "Copilot"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Alocação por unidade.Copilot)",
+              "nativeQueryRef": "Copilot"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Alocação por unidade"
+                        }
+                      },
+                      "Property": "Custo anual E5 + Copilot"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Alocação por unidade.Custo anual E5 + Copilot)",
+              "nativeQueryRef": "Custo anual E5 + Copilot"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Alocação por unidade"
+                        }
+                      },
+                      "Property": "E5 terceiros: conta desabilitada"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Alocação por unidade.E5 terceiros: conta desabilitada)",
+              "nativeQueryRef": "conta desabilitada"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Alocação por unidade"
+                        }
+                      },
+                      "Property": "E5 terceiros: situação INATIVO"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Alocação por unidade.E5 terceiros: situação INATIVO)",
+              "nativeQueryRef": "situação INATIVO"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Alocação por unidade"
+                        }
+                      },
+                      "Property": "E5 terceiros: situação ausente/outro"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Alocação por unidade.E5 terceiros: situação ausente/outro)",
+              "nativeQueryRef": "situação ausente/outro"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Alocação por unidade"
+                        }
+                      },
+                      "Property": "Pessoas E5/Copilot"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Alocação por unidade.Pessoas E5/Copilot)",
+              "nativeQueryRef": "Pessoas E5/Copilot"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "c3d4e5f6a7b8c9d0e1f2",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Alocação por unidade"
+              }
+            },
+            "Property": "Nível"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "d4e5f6a7b8c9d0e1f2a3",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Alocação por unidade"
+              }
+            },
+            "Property": "Unidade"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}
