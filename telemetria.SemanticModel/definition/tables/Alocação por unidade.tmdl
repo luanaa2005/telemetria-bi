@@ -21,7 +21,7 @@ table 'Alocação por unidade'
 		lineageTag: e5f6a7b8-c9d0-1234-e5f6-a7b8c9d0e1f2
 
 	measure 'Custo Anual Total' = CALCULATE(SUM('Alocação por unidade'[Custo anual E5 + Copilot]), 'Alocação por unidade'[Nível] = "UNIDADE")
-		formatString: R$ #,##0
+		formatString: #,##0
 		lineageTag: f6a7b8c9-d0e1-2345-f6a7-b8c9d0e1f2a3
 
 	column Nível
@@ -85,7 +85,7 @@ table 'Alocação por unidade'
 
 	column 'Custo anual E5 + Copilot'
 		dataType: double
-		formatString: R$ #,##0
+		formatString: #,##0
 		lineageTag: c1d2e3f4-a5b6-7890-c1d2-e3f4a5b6c7d8
 		summarizeBy: sum
 		sourceColumn: Custo anual E5 + Copilot
