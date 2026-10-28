@@ -1,0 +1,24 @@
+expression CaminhoPasta = "C:\Users\Becker\Documents\TCU\telemetria-bi\data" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: e7f8a9b0-c1d2-4e3f-a4b5-c6d7e8f9a0b1
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// Cadastro único das colunas de licença, nomes de exibição e ordem das combinações.
+expression CatalogoProdutos =
+		let
+		    Produtos = #table(
+		        type table [ColunaOrigem = text, Produto = text, Ordem = Int64.Type],
+		        {
+		            {"M365 E5", "M365 E5", 1},
+		            {"M365 F3", "M365 F3", 2},
+		            {"Copilot", "Copilot", 3},
+		            {"M365 F5 Security", "M365 F5 Security", 4}
+		        }
+		    )
+		in
+		    Table.Sort(Produtos, {{"Ordem", Order.Ascending}, {"Produto", Order.Ascending}})
+	lineageTag: 6b7cf117-ebc6-42c4-9fb0-035f87b01509
+
+	annotation PBI_ResultType = Table

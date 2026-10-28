@@ -1,0 +1,14 @@
+table DimCombinacao
+	lineageTag: 6e79f381-912c-5c4e-8a36-5dca10c16afb
+
+	column Produtos
+		dataType: string
+		lineageTag: c08b70f4-62b5-5dba-a9cb-dabce635f04f
+		summarizeBy: none
+		sourceColumn: Produtos
+
+	partition DimCombinacao = m
+		mode: import
+		source = Table.Distinct(Table.SelectColumns(FatoContas, {"Produtos"}))
+
+	annotation PBI_ResultType = Table

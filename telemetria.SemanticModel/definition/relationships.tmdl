@@ -1,12 +1,43 @@
-relationship r_nivel_visao_gerencial
-	fromColumn: 'Visão Gerencial'.Nível
-	toColumn: 'dim Nível'.Nível
+relationship r_FatoContas_DimConta
+	fromColumn: FatoContas.UPN
+	toColumn: DimConta.UPN
 
-relationship r_nivel_alocacao_pessoas
-	fromColumn: AlocacaoPessoas.Nível
-	toColumn: 'dim Nível'.Nível
+relationship r_FatoContas_DimOrganizacao
+	fromColumn: FatoContas.OrganizacaoKey
+	toColumn: DimOrganizacao.OrganizacaoKey
 
-relationship r_nivel_alocacao_unidade
-	fromColumn: 'Alocação por unidade'.Nível
-	toColumn: 'dim Nível'.Nível
+relationship r_FatoContas_DimVinculo
+	fromColumn: FatoContas.Qualidade
+	toColumn: DimVinculo.Qualidade
 
+relationship r_FatoContas_DimEmpresa
+	fromColumn: FatoContas.Empresa
+	toColumn: DimEmpresa.Empresa
+
+relationship r_FatoContas_DimCombinacao
+	fromColumn: FatoContas.Produtos
+	toColumn: DimCombinacao.Produtos
+
+relationship r_FatoLicencas_DimConta
+	fromColumn: FatoLicencas.UPN
+	toColumn: DimConta.UPN
+
+relationship r_FatoLicencas_DimOrganizacao
+	fromColumn: FatoLicencas.OrganizacaoKey
+	toColumn: DimOrganizacao.OrganizacaoKey
+
+relationship r_FatoLicencas_DimVinculo
+	fromColumn: FatoLicencas.Qualidade
+	toColumn: DimVinculo.Qualidade
+
+relationship r_FatoLicencas_DimEmpresa
+	fromColumn: FatoLicencas.Empresa
+	toColumn: DimEmpresa.Empresa
+
+relationship r_FatoLicencas_DimCombinacao
+	fromColumn: FatoLicencas.Produtos
+	toColumn: DimCombinacao.Produtos
+
+relationship r_FatoLicencas_DimProduto
+	fromColumn: FatoLicencas.Produto
+	toColumn: DimProduto.Produto

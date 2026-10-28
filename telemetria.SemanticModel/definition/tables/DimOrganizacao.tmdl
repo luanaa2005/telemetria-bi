@@ -1,0 +1,38 @@
+table DimOrganizacao
+	lineageTag: add1c7b0-8e09-5e41-8344-f9be9243fb6c
+
+	column OrganizacaoKey
+		dataType: string
+		isHidden
+		lineageTag: e4e9633d-151e-5eea-90f4-bc65b623322d
+		summarizeBy: none
+		sourceColumn: OrganizacaoKey
+
+	column Unidade
+		dataType: string
+		lineageTag: cd47a37f-f354-55cf-82fc-66cdee528c1a
+		summarizeBy: none
+		sourceColumn: Unidade
+
+	column Subunidade
+		dataType: string
+		lineageTag: 98cbf6e8-9c36-5ad1-80ac-89de93f96d9b
+		summarizeBy: none
+		sourceColumn: Subunidade
+
+	hierarchy 'Estrutura organizacional'
+		lineageTag: 76e97a68-1a9c-5b89-9f95-b668f01c3a45
+
+		level Unidade
+			lineageTag: dc806af0-2ac6-4093-ace4-e1afab815783
+			column: Unidade
+
+		level Subunidade
+			lineageTag: ffe45094-3d0c-4050-a681-77ef3347311b
+			column: Subunidade
+
+	partition DimOrganizacao = m
+		mode: import
+		source = Table.Distinct(Table.SelectColumns(FatoContas, {"OrganizacaoKey", "Unidade", "Subunidade"}))
+
+	annotation PBI_ResultType = Table

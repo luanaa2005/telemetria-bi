@@ -1,0 +1,30 @@
+table DimProduto
+	lineageTag: 6ada3c5a-3cf6-5d2c-9b0b-0256393aaa7d
+
+	column ColunaOrigem
+		dataType: string
+		isHidden
+		lineageTag: a54d23bd-d9b8-46c1-931d-134c53f9f0bc
+		summarizeBy: none
+		sourceColumn: ColunaOrigem
+
+	column Produto
+		dataType: string
+		lineageTag: 8c276953-6f28-564e-ba1e-f9042f5accd6
+		summarizeBy: none
+		sourceColumn: Produto
+		sortByColumn: Ordem
+
+	column Ordem
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e282967d-32ad-5511-90ed-cb99826196fa
+		summarizeBy: none
+		sourceColumn: Ordem
+
+	partition DimProduto = m
+		mode: import
+		source = CatalogoProdutos
+
+	annotation PBI_ResultType = Table

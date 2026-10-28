@@ -1,5 +1,5 @@
 model Model
-	culture: en-US
+	culture: pt-BR
 	defaultPowerBIDataSourceVersion: powerBI_V3
 	sourceQueryCulture: pt-BR
 	valueFilterBehavior: independent
@@ -7,21 +7,22 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation __PBI_TimeIntelligenceEnabled = 1
+annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["telemetria","dim Nível","Visão Gerencial","Pessoas por vínculo","Alocação por unidade","Preços","AlocacaoPessoas"]
+annotation PBI_QueryOrder = ["CaminhoPasta","CatalogoProdutos","telemetria","DimConta","DimEmpresa","DimOrganizacao","DimProduto","DimVinculo","FatoContas","FatoLicencas","Indicadores","DimCombinacao"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
-ref expression CaminhoPasta
-
 ref table telemetria
-ref table 'dim Nível'
-ref table 'Visão Gerencial'
-ref table 'Pessoas por vínculo'
-ref table 'Alocação por unidade'
-ref table Preços
-ref table AlocacaoPessoas
+ref table DimCombinacao
+ref table DimConta
+ref table DimEmpresa
+ref table DimOrganizacao
+ref table DimProduto
+ref table DimVinculo
+ref table FatoContas
+ref table FatoLicencas
+ref table Indicadores
 
 ref cultureInfo en-US
-
+ref cultureInfo pt-BR

@@ -1,4 +1,5 @@
 table telemetria
+	isHidden
 	lineageTag: 5a57490f-db46-417e-9251-b49805365b46
 
 	column 'Data da coleta'
@@ -151,26 +152,22 @@ table telemetria
 
 	partition telemetria = m
 		mode: import
-		source = ```
+		source =
 				let
-				    Source = Folder.Files(CaminhoPasta),
-				    CsvOnly = Table.SelectRows(Source, each [Extension] = ".csv"),
-				    Sorted = Table.Sort(CsvOnly, {{"Date modified", Order.Descending}}),
-				    LatestFile = Sorted{0}[Content],
-				    Csv = Csv.Document(LatestFile, [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    Source = File.Contents(CaminhoPasta & "\fake-data.csv"),
+				    Csv = Csv.Document(Source, [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
 				    Headers = Table.PromoteHeaders(Csv, [PromoteAllScalars=true]),
-				    TypedNums = Table.TransformColumnTypes(Headers, {
-				        {"Copilot", Int64.Type},
-				        {"M365 E5", Int64.Type},
-				        {"M365 F3", Int64.Type},
-				        {"M365 F5 Security", Int64.Type}
+				    Normalized = Table.TransformColumns(Headers, {
+				        {"UPN", each Text.Lower(Text.Trim(_)), type text},
+				        {"Qualidade", each Text.Upper(Text.Trim(_)), type text},
+				        {"Situação funcional", each Text.Upper(Text.Trim(_)), type text},
+				        {"Conta", each Text.Proper(Text.Trim(_)), type text}
 				    }),
+				    TypedNums = Table.TransformColumnTypes(Normalized, List.Transform(CatalogoProdutos[ColunaOrigem], each {_, Int64.Type})),
 				    Typed = Table.TransformColumns(TypedNums, {{"Data da coleta", each DateTime.From(DateTimeZone.From(_)), type datetime}})
 				in
 				    Typed
-				```
 
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-
