@@ -163,12 +163,7 @@ table telemetria
 				        {"Situação funcional", each Text.Upper(Text.Trim(_)), type text},
 				        {"Conta", each Text.Proper(Text.Trim(_)), type text}
 				    }),
-				    TypedNums = Table.TransformColumnTypes(Normalized, {
-				        {"Copilot", Int64.Type},
-				        {"M365 E5", Int64.Type},
-				        {"M365 F3", Int64.Type},
-				        {"M365 F5 Security", Int64.Type}
-				    }),
+				    TypedNums = Table.TransformColumnTypes(Normalized, List.Transform(CatalogoProdutos[ColunaOrigem], each {_, Int64.Type})),
 				    Typed = Table.TransformColumns(TypedNums, {{"Data da coleta", each DateTime.From(DateTimeZone.From(_)), type datetime}})
 				in
 				    Typed

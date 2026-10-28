@@ -4,66 +4,14 @@
     {
       "ordinal": 0,
       "scrollPosition": {
-        "x": 53.333332061767578,
+        "x": 49.60370799999994,
         "y": 0
       },
       "nodes": [
         {
           "location": {
-            "x": 1136,
-            "y": 0
-          },
-          "nodeIndex": "AlocacaoPessoas",
-          "nodeLineageTag": "a33bcb64-20e3-4cd2-b9a5-4ac493b8d564",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 0
-        },
-        {
-          "location": {
-            "x": 1420,
-            "y": 0
-          },
-          "nodeIndex": "Preços",
-          "nodeLineageTag": "068ddccf-f8b7-4eab-8a20-c93ed2e8e5f8",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 0
-        },
-        {
-          "location": {
-            "x": 0,
-            "y": 98
-          },
-          "nodeIndex": "Alocação por unidade",
-          "nodeLineageTag": "ea0641a8-db2f-4202-b657-e5ca666e8596",
-          "size": {
-            "height": 104,
-            "width": 234
-          },
-          "zIndex": 0
-        },
-        {
-          "location": {
-            "x": 284,
-            "y": 98
-          },
-          "nodeIndex": "Pessoas por vínculo",
-          "nodeLineageTag": "a64207cb-bbb4-4b9f-bbf7-19d9a9a51e7d",
-          "size": {
-            "height": 104,
-            "width": 234
-          },
-          "zIndex": 0
-        },
-        {
-          "location": {
-            "x": 568,
-            "y": 62
+            "x": 410.44396709731825,
+            "y": 1048.9072619491617
           },
           "nodeIndex": "telemetria",
           "nodeLineageTag": "5a57490f-db46-417e-9251-b49805365b46",
@@ -75,11 +23,24 @@
         },
         {
           "location": {
-            "x": 852,
-            "y": 98
+            "x": 131.90531022486812,
+            "y": 1050.5370741075785
           },
-          "nodeIndex": "Visão Gerencial",
-          "nodeLineageTag": "049a82d5-ae48-4aec-9a05-19f91fc5dd48",
+          "nodeIndex": "Indicadores",
+          "nodeLineageTag": "9d23e171-3963-5716-8659-4c063c5804e5",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 478.74452063859815,
+            "y": 191.3285879999998
+          },
+          "nodeIndex": "DimCombinacao",
+          "nodeLineageTag": "6e79f381-912c-5c4e-8a36-5dca10c16afb",
           "size": {
             "height": 104,
             "width": 234
@@ -87,19 +48,100 @@
           "zIndex": 0
         },
         {
-          "location": {},
-          "nodeIndex": "dim Nível",
-          "nodeLineageTag": "a1b2c3d4-e5f6-7890-a1b2-c3d4e5f6a7b8",
+          "location": {
+            "x": 486.69793984166506,
+            "y": 685.3630699209873
+          },
+          "nodeIndex": "DimConta",
+          "nodeLineageTag": "63fcaa0a-c97c-56ed-8ebe-4ae2e1ba51f3",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 496.49508575957793,
+            "y": 867.5471054446326
+          },
+          "nodeIndex": "DimEmpresa",
+          "nodeLineageTag": "e704aebf-c1ab-5540-a3e4-f4abc8334a64",
           "size": {
             "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 498.72934143791383,
+            "y": 377.74442674035396
+          },
+          "nodeIndex": "DimOrganizacao",
+          "nodeLineageTag": "add1c7b0-8e09-5e41-8344-f9be9243fb6c",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1392.87300905816,
+            "y": 425.17463999999944
+          },
+          "nodeIndex": "DimProduto",
+          "nodeLineageTag": "6ada3c5a-3cf6-5d2c-9b0b-0256393aaa7d",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 473.00678699999946,
+            "y": 0
+          },
+          "nodeIndex": "DimVinculo",
+          "nodeLineageTag": "a07adfa6-13df-5561-a811-5b375f7c2c65",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 357.0714673686277
+          },
+          "nodeIndex": "FatoContas",
+          "nodeLineageTag": "4ef5ba8c-605e-5e05-9423-0b097ea90e3e",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1039.8457458489581,
+            "y": 358.020600675526
+          },
+          "nodeIndex": "FatoLicencas",
+          "nodeLineageTag": "b519ad36-29b4-5925-934a-511d69119777",
+          "size": {
+            "height": 248,
             "width": 234
           },
           "zIndex": 0
         }
       ],
       "name": "All tables",
-      "zoomValue": 100,
-      "pinKeyFieldsToTop": false,
+      "zoomValue": 56.44739300537781,
+      "pinKeyFieldsToTop": true,
       "showExtraHeaderInfo": false,
       "hideKeyFieldsWhenCollapsed": false,
       "tablesLocked": false

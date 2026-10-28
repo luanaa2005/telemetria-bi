@@ -1,15 +1,3 @@
-relationship r_nivel_visao_gerencial
-	fromColumn: 'Visão Gerencial'.Nível
-	toColumn: 'dim Nível'.Nível
-
-relationship r_nivel_alocacao_pessoas
-	fromColumn: AlocacaoPessoas.Nível
-	toColumn: 'dim Nível'.Nível
-
-relationship r_nivel_alocacao_unidade
-	fromColumn: 'Alocação por unidade'.Nível
-	toColumn: 'dim Nível'.Nível
-
 relationship r_FatoContas_DimConta
 	fromColumn: FatoContas.UPN
 	toColumn: DimConta.UPN

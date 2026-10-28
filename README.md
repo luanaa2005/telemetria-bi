@@ -22,9 +22,9 @@ O parâmetro `CaminhoPasta`, no Power Query, aponta para a pasta `data`. Ajuste-
 - **Contas na base:** quantidade de UPNs na fotografia do job.
 - **Contas licenciadas:** UPNs com pelo menos um produto no recorte selecionado.
 - **Licenças atribuídas:** quantidade de combinações UPN × produto com indicador igual a 1. Uma conta com E5 e Copilot soma duas atribuições.
-- **Cobertura:** contas licenciadas divididas pelas contas do recorte organizacional. Ao selecionar um produto, o denominador continua sendo a população da unidade, vínculo e empresa selecionados.
+- **Cobertura:** contas licenciadas divididas pelas contas do recorte. Unidade, vínculo, empresa e combinação de produtos restringem essa população; um filtro de produto individual em `DimProduto` restringe somente o numerador.
 - **Contas para revisão:** quantidade de contas distintas que apresentam ao menos uma das condições abaixo. Uma conta com vários motivos entra uma única vez.
-- **Taxa de revisão:** contas sinalizadas divididas pela população do recorte organizacional. Selecionar um motivo restringe o numerador, mas preserva essa população no denominador.
+- **Taxa de revisão:** contas sinalizadas divididas pela população do recorte, incluindo unidade, vínculo, empresa e combinação de produtos selecionados. Selecionar um motivo restringe o numerador, mas preserva essa população no denominador. Por exemplo, a combinação M365 F3 + M365 F5 Security tem 141 contas sinalizadas em 655 na base fictícia: 21,5% de revisão dentro dessa combinação.
 - **% Copilot:** contas com Copilot atribuído divididas pelas contas do recorte; indica distribuição, sem medir utilização.
 - **Subunidades no recorte:** pares distintos de Unidade + Subunidade. Um mesmo nome em unidades diferentes não é fundido.
 
@@ -39,13 +39,15 @@ Esses critérios identificam registros para conferência cadastral. Não comprov
 
 ## Modelo
 
-`FatoContas` mantém uma linha por conta e preserva as contas sem licença. `FatoLicencas` transforma as quatro colunas de produtos em atribuições individuais, mantendo somente valores iguais a 1.
+`FatoContas` mantém uma linha por conta e preserva as contas sem licença. `FatoLicencas` transforma as colunas de produtos cadastrados em atribuições individuais, mantendo somente valores iguais a 1.
+
+A expressão Power Query `CatalogoProdutos` centraliza a coluna de origem no CSV, o nome de exibição e a ordem de cada produto. Ela alimenta a tipagem da origem, os totais e combinações de `FatoContas`, o unpivot de `FatoLicencas` e a dimensão `DimProduto`. As combinações e os produtos individuais usam os mesmos nomes de exibição. Para incorporar um novo produto às contagens, combinações e ao gráfico por produto, adicione sua coluna de indicadores 0/1 ao CSV e uma linha ao cadastro. Um cartão ou medida específico para esse produto continua sendo uma alteração explícita no relatório. As medidas específicas existentes identificam o produto pela coluna de origem, independentemente do nome de exibição.
 
 As dimensões `DimConta`, `DimOrganizacao`, `DimVinculo`, `DimEmpresa` e `DimCombinacao` se relacionam com ambas as tabelas por relações 1 para muitos, com filtro da dimensão para o fato. `DimProduto` filtra somente as atribuições. As duas tabelas de fatos não se relacionam diretamente. `Indicadores` reúne as medidas do relatório.
 
-`DimOrganizacao` usa a chave composta Unidade + Subunidade. `DimCombinacao` mantém o conjunto completo de produtos de uma conta, permitindo que a seleção de uma combinação filtre corretamente tanto contas quanto atribuições. A consulta importada com nome de data passou a referenciar `telemetria`, usando a mesma fonte e transformação.
+`DimOrganizacao` usa a chave composta Unidade + Subunidade. `DimCombinacao` mantém o conjunto completo de produtos de uma conta, permitindo que a seleção de uma combinação filtre corretamente tanto contas quanto atribuições.
 
-As tabelas anteriores foram preservadas e ocultadas para compatibilidade. As novas páginas utilizam o novo modelo e as novas medidas.
+As sete tabelas antigas sem uso nas páginas foram removidas, junto com seus relacionamentos e referências. A tabela oculta `telemetria` permanece como origem das consultas do modelo.
 
 ## Verificação
 

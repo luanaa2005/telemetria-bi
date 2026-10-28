@@ -9,18 +9,11 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["telemetria","dim Nível","Visão Gerencial","Pessoas por vínculo","Alocação por unidade","Preços","AlocacaoPessoas","CaminhoPasta","DimConta","DimEmpresa","DimOrganizacao","DimProduto","DimVinculo","FatoContas","FatoLicencas","Indicadores","27-10-2026-inventarioLicOffice365-050041","DimCombinacao"]
+annotation PBI_QueryOrder = ["CaminhoPasta","CatalogoProdutos","telemetria","DimConta","DimEmpresa","DimOrganizacao","DimProduto","DimVinculo","FatoContas","FatoLicencas","Indicadores","DimCombinacao"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
 ref table telemetria
-ref table 'dim Nível'
-ref table 'Visão Gerencial'
-ref table 'Pessoas por vínculo'
-ref table 'Alocação por unidade'
-ref table Preços
-ref table AlocacaoPessoas
-ref table 27-10-2026-inventarioLicOffice365-050041
 ref table DimCombinacao
 ref table DimConta
 ref table DimEmpresa

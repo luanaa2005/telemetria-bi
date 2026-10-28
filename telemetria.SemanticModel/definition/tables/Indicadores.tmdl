@@ -11,7 +11,7 @@ table Indicadores
 		formatString: #,0
 		lineageTag: 33f2a668-4320-5159-a253-81529ffa835a
 
-	/// Contas sem qualquer um dos quatro produtos.
+	/// Contas sem qualquer produto do cadastro.
 	measure 'Contas sem licença' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[Total de licenças] = 0), 0)
 		formatString: #,0
 		lineageTag: 300ce01c-e8b4-575c-9451-cfa940aa22c1
@@ -31,8 +31,8 @@ table Indicadores
 		formatString: #,0
 		lineageTag: e3ea13fe-f18d-5781-93ea-af240ac0dbab
 
-	/// Situação funcional inativa e ao menos um dos quatro produtos atribuído.
-	measure 'Inativas com licença' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[Situação funcional] = "INATIVO", FatoContas[Total de licenças] > 0), 0)
+	/// Situação funcional inativa e ao menos um produto atribuído.
+	measure 'Inativas com licença' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[Situação] = "Inativa", FatoContas[Total de licenças] > 0), 0)
 		formatString: #,0
 		lineageTag: 666834d7-31bc-5018-9107-37973722afbd
 
@@ -42,7 +42,7 @@ table Indicadores
 		lineageTag: ef82a23b-6533-5b3c-83bc-f2bf5b1ef4c8
 
 	/// Situação funcional ativa e conta desabilitada, com ou sem licença.
-	measure 'Ativas desabilitadas' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[Situação funcional] = "ATIVO", FatoContas[Conta] = "Desabilitada"), 0)
+	measure 'Ativas desabilitadas' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[Situação] = "Ativa", FatoContas[Conta] = "Desabilitada"), 0)
 		formatString: #,0
 		lineageTag: c0254f42-2d7b-5f27-931e-901f3d409f90
 
@@ -63,23 +63,23 @@ table Indicadores
 	measure 'Nota das licenças' = "Uma conta pode ter vários produtos"
 		lineageTag: c734e107-70f9-596e-8383-bbd35534bd30
 
-	measure E5 = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[Produto] = "M365 E5"))
+	measure E5 = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[ColunaOrigem] = "M365 E5"))
 		formatString: #,0
 		lineageTag: cb0b18f8-b6b2-53e2-be7b-0f5b9947e0b2
 
-	measure F3 = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[Produto] = "M365 F3"))
+	measure F3 = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[ColunaOrigem] = "M365 F3"))
 		formatString: #,0
 		lineageTag: dc0915dc-d46c-5e9f-ab7e-b5ce7cd0f3d5
 
-	measure Copilot = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[Produto] = "Copilot"))
+	measure Copilot = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[ColunaOrigem] = "Copilot"))
 		formatString: #,0
 		lineageTag: 0f4a574a-4c23-5a17-9a14-2e30d5375a41
 
-	measure 'F5 Security' = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[Produto] = "M365 F5 Security"))
+	measure 'F5 Security' = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[ColunaOrigem] = "M365 F5 Security"))
 		formatString: #,0
 		lineageTag: 71fb2f3f-c188-5e90-a6ef-8073fe47b185
 
-	/// Contas para revisão sobre a população do recorte organizacional; selecionar um motivo não reduz o denominador.
+	/// Contas para revisão sobre a população do recorte, incluindo a combinação de produtos; selecionar um motivo não reduz o denominador.
 	measure 'Taxa de revisão' = DIVIDE([Contas para revisão], CALCULATE([Contas na base], REMOVEFILTERS(FatoContas[Motivo da revisão]), REMOVEFILTERS(FatoContas[Revisar])))
 		formatString: 0.0%
 		lineageTag: fa501496-c2b4-57ef-a955-3e630b344011

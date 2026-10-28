@@ -174,14 +174,16 @@ table FatoContas
 		source =
 				let
 				    Fonte = telemetria,
+				    Catalogo = Table.Buffer(CatalogoProdutos),
+				    ColunasProdutos = Catalogo[ColunaOrigem],
 				    ComChave = Table.AddColumn(Fonte, "OrganizacaoKey", each [Unidade] & "|" & [Subunidade], type text),
-				    ComTotal = Table.AddColumn(ComChave, "Total de licenças", each [#"M365 E5"] + [#"M365 F3"] + [Copilot] + [#"M365 F5 Security"], Int64.Type),
-				    ComProdutos = Table.AddColumn(ComTotal, "Produtos", each Text.Combine(List.RemoveNulls({
-				        if [#"M365 E5"] = 1 then "E5" else null,
-				        if [#"M365 F3"] = 1 then "F3" else null,
-				        if [Copilot] = 1 then "Copilot" else null,
-				        if [#"M365 F5 Security"] = 1 then "F5 Security" else null
-				    }), " · "), type text),
+				    ComTotal = Table.AddColumn(ComChave, "Total de licenças", each List.Sum(Record.FieldValues(Record.SelectFields(_, ColunasProdutos))), Int64.Type),
+				    ComProdutos = Table.AddColumn(ComTotal, "Produtos", each
+				        let
+				            ContaAtual = _,
+				            Atribuidos = Table.SelectRows(Catalogo, (ProdutoAtual) => Record.Field(ContaAtual, ProdutoAtual[ColunaOrigem]) = 1)
+				        in
+				            Text.Combine(Atribuidos[Produto], " · "), type text),
 				    ProdutosVisiveis = Table.ReplaceValue(ComProdutos, "", "Sem licença", Replacer.ReplaceValue, {"Produtos"}),
 				    ComCobertura = Table.AddColumn(ProdutosVisiveis, "Cobertura", each if [#"Total de licenças"] > 0 then "Com licença" else "Sem licença", type text),
 				    ComSituacao = Table.AddColumn(ComCobertura, "Situação", each if [#"Situação funcional"] = "ATIVO" then "Ativa" else if [#"Situação funcional"] = "INATIVO" then "Inativa" else "Não informada", type text),

@@ -54,10 +54,15 @@ table FatoLicencas
 		mode: import
 		source =
 				let
-				    Fonte = Table.SelectColumns(FatoContas, {"UPN", "OrganizacaoKey", "Qualidade", "Empresa", "Produtos", "M365 E5", "M365 F3", "Copilot", "M365 F5 Security"}),
-				    ProdutosEmLinhas = Table.Unpivot(Fonte, {"M365 E5", "M365 F3", "Copilot", "M365 F5 Security"}, "Produto", "Quantidade"),
+				    Catalogo = Table.Buffer(CatalogoProdutos),
+				    ColunasProdutos = Catalogo[ColunaOrigem],
+				    Fonte = Table.SelectColumns(FatoContas, {"UPN", "OrganizacaoKey", "Qualidade", "Empresa", "Produtos"} & ColunasProdutos),
+				    ProdutosEmLinhas = Table.Unpivot(Fonte, ColunasProdutos, "ColunaOrigem", "Quantidade"),
 				    Atribuidas = Table.SelectRows(ProdutosEmLinhas, each [Quantidade] = 1),
-				    Tipos = Table.TransformColumnTypes(Atribuidas, {{"Quantidade", Int64.Type}})
+				    ComCatalogo = Table.NestedJoin(Atribuidas, {"ColunaOrigem"}, Catalogo, {"ColunaOrigem"}, "Cadastro", JoinKind.Inner),
+				    ComProduto = Table.ExpandTableColumn(ComCatalogo, "Cadastro", {"Produto"}, {"Produto"}),
+				    SemOrigem = Table.RemoveColumns(ComProduto, {"ColunaOrigem"}),
+				    Tipos = Table.TransformColumnTypes(SemOrigem, {{"Quantidade", Int64.Type}})
 				in
 				    Tipos
 
