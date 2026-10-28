@@ -1,0 +1,14 @@
+table DimEmpresa
+	lineageTag: e704aebf-c1ab-5540-a3e4-f4abc8334a64
+
+	column Empresa
+		dataType: string
+		lineageTag: 15ab0598-58ed-565e-94cb-5797bcf17076
+		summarizeBy: none
+		sourceColumn: Empresa
+
+	partition DimEmpresa = m
+		mode: import
+		source = Table.Distinct(Table.SelectColumns(telemetria, {"Empresa"}))
+
+	annotation PBI_ResultType = Table

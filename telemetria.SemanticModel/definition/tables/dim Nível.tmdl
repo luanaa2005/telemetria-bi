@@ -1,4 +1,5 @@
 table 'dim Nível'
+	isHidden
 	lineageTag: a1b2c3d4-e5f6-7890-a1b2-c3d4e5f6a7b8
 
 	column Nível
@@ -11,10 +12,8 @@ table 'dim Nível'
 
 	partition 'dim Nível' = m
 		mode: import
-		source =
-				#table({"Nível"}, {{"UNIDADE"}, {"SUBUNIDADE"}})
+		source = #table({"Nível"}, {{"UNIDADE"}, {"SUBUNIDADE"}})
 
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-

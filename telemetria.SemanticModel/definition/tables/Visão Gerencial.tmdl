@@ -1,4 +1,5 @@
 table 'Visão Gerencial'
+	isHidden
 	lineageTag: 049a82d5-ae48-4aec-9a05-19f91fc5dd48
 
 	measure Autoridades = SUM('Visão Gerencial'[U1 — Autoridades — licenças])
@@ -109,7 +110,7 @@ table 'Visão Gerencial'
 
 	partition 'Visão Gerencial' = m
 		mode: import
-		source = ```
+		source =
 				let
 				    Source = telemetria,
 				    WithNivel = Table.AddColumn(Source, "Nível",
@@ -143,9 +144,7 @@ table 'Visão Gerencial'
 				    })
 				in
 				    Grouped
-				```
 
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-

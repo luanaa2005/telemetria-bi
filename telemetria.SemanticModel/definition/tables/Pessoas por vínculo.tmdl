@@ -1,4 +1,5 @@
 table 'Pessoas por vínculo'
+	isHidden
 	lineageTag: a64207cb-bbb4-4b9f-bbf7-19d9a9a51e7d
 
 	column 'Data da coleta'
@@ -160,7 +161,7 @@ table 'Pessoas por vínculo'
 
 	partition 'Pessoas por vínculo' = m
 		mode: import
-		source = ```
+		source =
 				let
 				    Source = telemetria,
 				    WithTotal = Table.AddColumn(Source, "Total de licenças",
@@ -168,9 +169,7 @@ table 'Pessoas por vínculo'
 				        Int64.Type)
 				in
 				    WithTotal
-				```
 
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-

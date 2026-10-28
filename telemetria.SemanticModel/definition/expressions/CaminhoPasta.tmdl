@@ -1,6 +1,0 @@
-expression CaminhoPasta = "\\ger-sinet\telemetria" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
-	lineageTag: e7f8a9b0-c1d2-4e3f-a4b5-c6d7e8f9a0b1
-
-	annotation PBI_NavigationStepName = Navigation
-	annotation PBI_ResultType = Text
-

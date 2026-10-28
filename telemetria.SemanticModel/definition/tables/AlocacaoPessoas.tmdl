@@ -1,7 +1,8 @@
 table AlocacaoPessoas
+	isHidden
 	lineageTag: 2ec14cbe-2d39-40ae-a6c7-0f6058a901de
 
-	measure 'Total Licenças' = COUNTROWS(AlocacaoPessoas)
+	measure 'Total Licenças' = [Licenças atribuídas]
 		formatString: 0
 		lineageTag: 821e6228-5cdb-4f56-a040-8f56df3355d0
 
@@ -179,9 +180,33 @@ table AlocacaoPessoas
 
 		annotation SummarizationSetBy = Automatic
 
+	column 'Detalhe da classificação'
+		dataType: string
+		lineageTag: e8837c22-37ab-4d32-85be-1c234043e635
+		summarizeBy: none
+		sourceColumn: Detalhe da classificação
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fonte da classificação'
+		dataType: string
+		lineageTag: 3c3ecf1e-afef-4cb7-9af9-a1746089df70
+		summarizeBy: none
+		sourceColumn: Fonte da classificação
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Padrão xCPF'
+		dataType: string
+		lineageTag: b7797440-3535-4ec5-92e3-9aa2a4d08a74
+		summarizeBy: none
+		sourceColumn: Padrão xCPF
+
+		annotation SummarizationSetBy = Automatic
+
 	partition AlocacaoPessoas = m
 		mode: import
-		source = ```
+		source =
 				let
 				    Source = telemetria,
 				    WithNivel = Table.AddColumn(Source, "Nível",
@@ -192,9 +217,7 @@ table AlocacaoPessoas
 				        else "Sem licença")
 				in
 				    Classificacao
-				```
 
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-

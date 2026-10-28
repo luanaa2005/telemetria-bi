@@ -1,4 +1,5 @@
 table Preços
+	isHidden
 	lineageTag: 14d2e2e8-df67-4630-ad6c-edf0288bf5a8
 
 	column 'SKU técnico'
@@ -60,4 +61,3 @@ table Preços
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-

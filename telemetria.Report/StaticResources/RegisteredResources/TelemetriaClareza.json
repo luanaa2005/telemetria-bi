@@ -1,0 +1,65 @@
+{
+  "name": "Telemetria · Clareza",
+  "dataColors": [
+    "#3867E8",
+    "#087F83",
+    "#8060C5",
+    "#53738F",
+    "#D19A43",
+    "#68AAB0"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#20354D",
+  "tableAccent": "#087F83",
+  "good": "#087F83",
+  "neutral": "#D19A43",
+  "bad": "#C05D4B",
+  "textClasses": {
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 15,
+      "color": "#12263F"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 11,
+      "color": "#20354D"
+    },
+    "callout": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 38,
+      "color": "#12263F"
+    },
+    "header": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#12263F"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "show": false
+          }
+        ],
+        "border": [
+          {
+            "show": false
+          }
+        ],
+        "visualHeader": [
+          {
+            "show": false
+          }
+        ],
+        "title": [
+          {
+            "show": false
+          }
+        ]
+      }
+    }
+  }
+}

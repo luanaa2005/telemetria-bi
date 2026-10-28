@@ -1,0 +1,20 @@
+table DimConta
+	lineageTag: 63fcaa0a-c97c-56ed-8ebe-4ae2e1ba51f3
+
+	column UPN
+		dataType: string
+		lineageTag: 0be5fa29-f210-5e28-8434-eb7ffcd148fb
+		summarizeBy: none
+		sourceColumn: UPN
+
+	column Nome
+		dataType: string
+		lineageTag: 668e82e2-fffc-53d7-aed0-3db2c485ee9b
+		summarizeBy: none
+		sourceColumn: Nome
+
+	partition DimConta = m
+		mode: import
+		source = Table.Distinct(Table.SelectColumns(telemetria, {"UPN", "Nome"}))
+
+	annotation PBI_ResultType = Table

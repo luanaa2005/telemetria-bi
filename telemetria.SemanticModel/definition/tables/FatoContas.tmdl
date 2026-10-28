@@ -1,0 +1,198 @@
+table FatoContas
+	lineageTag: 4ef5ba8c-605e-5e05-9423-0b097ea90e3e
+
+	column 'Data da coleta'
+		dataType: dateTime
+		isHidden
+		lineageTag: 252dc25f-b269-5590-b74b-61b58e21f33d
+		summarizeBy: none
+		sourceColumn: Data da coleta
+
+	column Unidade
+		dataType: string
+		isHidden
+		lineageTag: 41d899f1-6860-51f8-aa72-4026da41e92b
+		summarizeBy: none
+		sourceColumn: Unidade
+
+	column Subunidade
+		dataType: string
+		isHidden
+		lineageTag: 5e05c768-b78b-5527-84d6-b3d907806943
+		summarizeBy: none
+		sourceColumn: Subunidade
+
+	column Qualidade
+		dataType: string
+		isHidden
+		lineageTag: e4eca943-a0cc-5993-a8b2-c8aebe27fb2b
+		summarizeBy: none
+		sourceColumn: Qualidade
+
+	column 'Detalhe da classificação'
+		dataType: string
+		lineageTag: a9b73248-39fc-5df7-8d10-9b55e16c0220
+		summarizeBy: none
+		sourceColumn: Detalhe da classificação
+
+	column 'Fonte da classificação'
+		dataType: string
+		lineageTag: ace3670d-6865-5f30-9c02-8ebc7db3d162
+		summarizeBy: none
+		sourceColumn: Fonte da classificação
+
+	column 'Tipo funcional (Graph)'
+		dataType: string
+		lineageTag: 12ae875e-673e-50ab-9e88-a946d61d5c30
+		summarizeBy: none
+		sourceColumn: Tipo funcional (Graph)
+
+	column 'Situação funcional'
+		dataType: string
+		lineageTag: a9897af1-8416-5505-83f7-f97140b167b3
+		summarizeBy: none
+		sourceColumn: Situação funcional
+
+	column 'Situação original (Graph)'
+		dataType: string
+		lineageTag: 912fa41e-50ef-5514-9393-b79b63416c56
+		summarizeBy: none
+		sourceColumn: Situação original (Graph)
+
+	column Nome
+		dataType: string
+		lineageTag: fb3a8f85-a03b-5760-aed9-0c0fe59e6592
+		summarizeBy: none
+		sourceColumn: Nome
+
+	column UPN
+		dataType: string
+		isHidden
+		lineageTag: 198b462d-3c38-5185-bb32-9c62f48eb9b3
+		summarizeBy: none
+		sourceColumn: UPN
+
+	column Empresa
+		dataType: string
+		isHidden
+		lineageTag: a5842b1e-92f5-5fbf-84aa-200b82c80bdc
+		summarizeBy: none
+		sourceColumn: Empresa
+
+	column Conta
+		dataType: string
+		lineageTag: 981a0fa6-2b01-5b58-b466-0d8353a7150f
+		summarizeBy: none
+		sourceColumn: Conta
+
+	column 'Padrão xCPF'
+		dataType: string
+		lineageTag: f15feb96-01ec-5b78-b13c-1b6aa26171c0
+		summarizeBy: none
+		sourceColumn: Padrão xCPF
+
+	column Copilot
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 04701bde-9292-5683-a92f-f97bfdfd1925
+		summarizeBy: none
+		sourceColumn: Copilot
+
+	column 'M365 E5'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f30994ab-bd37-5725-ba86-5015bc6e4aff
+		summarizeBy: none
+		sourceColumn: M365 E5
+
+	column 'M365 F3'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: eae7ba09-3df4-59a2-be49-4bc9658dad6d
+		summarizeBy: none
+		sourceColumn: M365 F3
+
+	column 'M365 F5 Security'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 91d60ff6-da87-5e5e-9ccc-d5528e135a44
+		summarizeBy: none
+		sourceColumn: M365 F5 Security
+
+	column OrganizacaoKey
+		dataType: string
+		isHidden
+		lineageTag: 5428e33b-2581-5c95-8428-9e5027c346f0
+		summarizeBy: none
+		sourceColumn: OrganizacaoKey
+
+	column 'Total de licenças'
+		dataType: int64
+		formatString: 0
+		lineageTag: ea493565-8177-5969-8417-0f9ba4546853
+		summarizeBy: none
+		sourceColumn: Total de licenças
+
+	column Produtos
+		dataType: string
+		lineageTag: 97593147-ce61-5360-b841-8d15581727d8
+		summarizeBy: none
+		sourceColumn: Produtos
+
+	column Cobertura
+		dataType: string
+		lineageTag: 4f66ad33-3d73-5934-8369-9928148caca0
+		summarizeBy: none
+		sourceColumn: Cobertura
+
+	column Situação
+		dataType: string
+		lineageTag: 11c7848a-80e9-590f-86f9-a90b94db25ca
+		summarizeBy: none
+		sourceColumn: Situação
+
+	column 'Motivo da revisão'
+		dataType: string
+		lineageTag: 0f957716-e878-5d4e-a5da-64474bcd097f
+		summarizeBy: none
+		sourceColumn: Motivo da revisão
+
+	column Revisar
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 787fad5f-6e40-5ae4-accb-2228f3522ae1
+		summarizeBy: none
+		sourceColumn: Revisar
+
+	partition FatoContas = m
+		mode: import
+		source =
+				let
+				    Fonte = telemetria,
+				    ComChave = Table.AddColumn(Fonte, "OrganizacaoKey", each [Unidade] & "|" & [Subunidade], type text),
+				    ComTotal = Table.AddColumn(ComChave, "Total de licenças", each [#"M365 E5"] + [#"M365 F3"] + [Copilot] + [#"M365 F5 Security"], Int64.Type),
+				    ComProdutos = Table.AddColumn(ComTotal, "Produtos", each Text.Combine(List.RemoveNulls({
+				        if [#"M365 E5"] = 1 then "E5" else null,
+				        if [#"M365 F3"] = 1 then "F3" else null,
+				        if [Copilot] = 1 then "Copilot" else null,
+				        if [#"M365 F5 Security"] = 1 then "F5 Security" else null
+				    }), " · "), type text),
+				    ProdutosVisiveis = Table.ReplaceValue(ComProdutos, "", "Sem licença", Replacer.ReplaceValue, {"Produtos"}),
+				    ComCobertura = Table.AddColumn(ProdutosVisiveis, "Cobertura", each if [#"Total de licenças"] > 0 then "Com licença" else "Sem licença", type text),
+				    ComSituacao = Table.AddColumn(ComCobertura, "Situação", each if [#"Situação funcional"] = "ATIVO" then "Ativa" else if [#"Situação funcional"] = "INATIVO" then "Inativa" else "Não informada", type text),
+				    ComMotivo = Table.AddColumn(ComSituacao, "Motivo da revisão", each
+				        if [#"Total de licenças"] > 0 and [#"Situação funcional"] = "INATIVO" then "Inativa com licença"
+				        else if [#"Total de licenças"] > 0 and [#"Situação funcional"] <> "ATIVO" and [#"Situação funcional"] <> "INATIVO" then "Situação não informada com licença"
+				        else if [#"Total de licenças"] > 0 and [Conta] = "Desabilitada" then "Desabilitada com licença"
+				        else if [#"Situação funcional"] = "ATIVO" and [Conta] = "Desabilitada" then "Ativa, mas desabilitada"
+				        else "Sem pendência", type text),
+				    ComRevisao = Table.AddColumn(ComMotivo, "Revisar", each if [#"Motivo da revisão"] = "Sem pendência" then 0 else 1, Int64.Type)
+				in
+				    ComRevisao
+
+	annotation PBI_ResultType = Table

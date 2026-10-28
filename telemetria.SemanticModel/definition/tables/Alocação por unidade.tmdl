@@ -1,11 +1,12 @@
 table 'Alocação por unidade'
+	isHidden
 	lineageTag: ea0641a8-db2f-4202-b657-e5ca666e8596
 
-	measure 'Total de E5' = CALCULATE(SUM('Alocação por unidade'[E5 total]), 'Alocação por unidade'[Nível] = "UNIDADE")
+	measure 'Total de E5' = [E5]
 		formatString: 0
 		lineageTag: a1b2c3d4-e5f6-7890-a1b2-c3d4e5f6a7b8
 
-	measure 'E5 em Terceiros' = CALCULATE(SUM('Alocação por unidade'[E5 terceiros]), 'Alocação por unidade'[Nível] = "UNIDADE")
+	measure 'E5 em Terceiros' = CALCULATE([E5], DimVinculo[Qualidade] = "TERCEIRIZADO")
 		formatString: 0
 		lineageTag: b2c3d4e5-f6a7-8901-b2c3-d4e5f6a7b8c9
 
@@ -16,7 +17,7 @@ table 'Alocação por unidade'
 	measure '% E5 Terceiros Color' = IF([% E5 Terceiros] >= 0.5, "#ED7373", IF([% E5 Terceiros] >= 0.25, "#FAC775", "#44C088"))
 		lineageTag: d4e5f6a7-b8c9-0123-d4e5-f6a7b8c9d0e1
 
-	measure 'Copilot Total' = CALCULATE(SUM('Alocação por unidade'[Copilot]), 'Alocação por unidade'[Nível] = "UNIDADE")
+	measure 'Copilot Total' = [Copilot]
 		formatString: 0
 		lineageTag: e5f6a7b8-c9d0-1234-e5f6-a7b8c9d0e1f2
 
@@ -83,6 +84,15 @@ table 'Alocação por unidade'
 
 		annotation SummarizationSetBy = Automatic
 
+	column 'Pessoas E5/Copilot'
+		dataType: int64
+		formatString: 0
+		lineageTag: 75bfd370-be56-46c5-b6dd-1b45dbd5b523
+		summarizeBy: sum
+		sourceColumn: Pessoas E5/Copilot
+
+		annotation SummarizationSetBy = Automatic
+
 	column 'Custo anual E5 + Copilot'
 		dataType: double
 		formatString: #,##0
@@ -119,18 +129,9 @@ table 'Alocação por unidade'
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Pessoas E5/Copilot'
-		dataType: int64
-		formatString: 0
-		lineageTag: 75bfd370-be56-46c5-b6dd-1b45dbd5b523
-		summarizeBy: sum
-		sourceColumn: Pessoas E5/Copilot
-
-		annotation SummarizationSetBy = Automatic
-
 	partition 'Alocação por unidade' = m
 		mode: import
-		source = ```
+		source =
 				let
 				    Source = telemetria,
 				    WithNivel = Table.AddColumn(Source, "Nível",
@@ -163,10 +164,9 @@ table 'Alocação por unidade'
 				            Int64.Type}
 				    }),
 				    WithCusto = Table.AddColumn(Grouped, "Custo anual E5 + Copilot",
-				        each [#"E5 total"] * 3120.60 + [Copilot] * 2590.08, type number)
+				        each null, type nullable number)
 				in
 				    WithCusto
-				```
 
 	annotation PBI_NavigationStepName = Navigation
 

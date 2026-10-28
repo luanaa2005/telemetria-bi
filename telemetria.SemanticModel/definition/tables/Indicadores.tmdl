@@ -1,0 +1,172 @@
+table Indicadores
+	lineageTag: 9d23e171-3963-5716-8659-4c063c5804e5
+
+	/// Contas distintas na fotografia atual do job. Uma linha por UPN.
+	measure 'Contas na base' = COALESCE(COUNTROWS(FatoContas), 0)
+		formatString: #,0
+		lineageTag: 34998176-e467-58f1-b077-4a2384528609
+
+	/// UPNs com ao menos um dos produtos no contexto selecionado.
+	measure 'Contas licenciadas' = COALESCE(DISTINCTCOUNT(FatoLicencas[UPN]), 0)
+		formatString: #,0
+		lineageTag: 33f2a668-4320-5159-a253-81529ffa835a
+
+	/// Contas sem qualquer um dos quatro produtos.
+	measure 'Contas sem licença' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[Total de licenças] = 0), 0)
+		formatString: #,0
+		lineageTag: 300ce01c-e8b4-575c-9451-cfa940aa22c1
+
+	/// Cada combinação de conta e produto conta como uma atribuição.
+	measure 'Licenças atribuídas' = COALESCE(SUM(FatoLicencas[Quantidade]), 0)
+		formatString: #,0
+		lineageTag: 2eccb0db-442c-5744-94ab-529000af626d
+
+	/// Contas com os produtos selecionados divididas por todas as contas do recorte organizacional.
+	measure Cobertura = DIVIDE([Contas licenciadas], [Contas na base])
+		formatString: 0%
+		lineageTag: 118c3fb0-b3a3-5030-91ef-ff7e4fb37e99
+
+	/// UPNs distintos com ao menos um motivo para revisão cadastral. Não mede uso ou ociosidade.
+	measure 'Contas para revisão' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[Revisar] = 1), 0)
+		formatString: #,0
+		lineageTag: e3ea13fe-f18d-5781-93ea-af240ac0dbab
+
+	/// Situação funcional inativa e ao menos um dos quatro produtos atribuído.
+	measure 'Inativas com licença' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[Situação funcional] = "INATIVO", FatoContas[Total de licenças] > 0), 0)
+		formatString: #,0
+		lineageTag: 666834d7-31bc-5018-9107-37973722afbd
+
+	/// Situação funcional não informada e ao menos um produto atribuído.
+	measure 'Não informadas com licença' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[Situação] = "Não informada", FatoContas[Total de licenças] > 0), 0)
+		formatString: #,0
+		lineageTag: ef82a23b-6533-5b3c-83bc-f2bf5b1ef4c8
+
+	/// Situação funcional ativa e conta desabilitada, com ou sem licença.
+	measure 'Ativas desabilitadas' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[Situação funcional] = "ATIVO", FatoContas[Conta] = "Desabilitada"), 0)
+		formatString: #,0
+		lineageTag: c0254f42-2d7b-5f27-931e-901f3d409f90
+
+	/// Conta desabilitada e ao menos um produto atribuído.
+	measure 'Desabilitadas com licença' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[Conta] = "Desabilitada", FatoContas[Total de licenças] > 0), 0)
+		formatString: #,0
+		lineageTag: 5bf338a7-2566-5eaf-83a8-6aebd3a105bc
+
+	measure 'Nota de cobertura' = IF([Contas na base] = 0, "Sem contas no recorte", FORMAT([Cobertura], "0%") & " de cobertura no recorte")
+		lineageTag: 33ea197a-b5b1-5d10-9dd6-cb8247b28ffd
+
+	measure 'Nota da base' = FORMAT([Contas sem licença], "0") & " contas sem licença"
+		lineageTag: b7fd19dc-1703-57f4-9721-9c4f30aee57a
+
+	measure 'Nota da revisão' = "Contagem de contas, sem duplicação"
+		lineageTag: 5726d1e9-91e7-5efe-b43a-3c6320b83296
+
+	measure 'Nota das licenças' = "Uma conta pode ter vários produtos"
+		lineageTag: c734e107-70f9-596e-8383-bbd35534bd30
+
+	measure E5 = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[Produto] = "M365 E5"))
+		formatString: #,0
+		lineageTag: cb0b18f8-b6b2-53e2-be7b-0f5b9947e0b2
+
+	measure F3 = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[Produto] = "M365 F3"))
+		formatString: #,0
+		lineageTag: dc0915dc-d46c-5e9f-ab7e-b5ce7cd0f3d5
+
+	measure Copilot = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[Produto] = "Copilot"))
+		formatString: #,0
+		lineageTag: 0f4a574a-4c23-5a17-9a14-2e30d5375a41
+
+	measure 'F5 Security' = CALCULATE([Licenças atribuídas], KEEPFILTERS(DimProduto[Produto] = "M365 F5 Security"))
+		formatString: #,0
+		lineageTag: 71fb2f3f-c188-5e90-a6ef-8073fe47b185
+
+	/// Contas para revisão sobre a população do recorte organizacional; selecionar um motivo não reduz o denominador.
+	measure 'Taxa de revisão' = DIVIDE([Contas para revisão], CALCULATE([Contas na base], REMOVEFILTERS(FatoContas[Motivo da revisão]), REMOVEFILTERS(FatoContas[Revisar])))
+		formatString: 0.0%
+		lineageTag: fa501496-c2b4-57ef-a955-3e630b344011
+
+	/// Proporção de contas com Copilot atribuído. Não mede utilização.
+	measure 'Adoção de Copilot' = DIVIDE([Copilot], [Contas na base])
+		formatString: 0.0%
+		lineageTag: abbc1803-1821-5bb1-b5ef-ff0d916d2263
+
+	measure 'Nota do Copilot' = IF([Contas na base] = 0, "Sem contas no recorte", FORMAT([Adoção de Copilot], "0.0%", "pt-BR") & " das contas do recorte")
+		lineageTag: 94707c38-8eba-5a91-937f-f48e26f71e7a
+
+	measure 'Nota da taxa de revisão' = IF(ISBLANK([Taxa de revisão]), "Sem contas no recorte", FORMAT([Taxa de revisão], "0.0%", "pt-BR") & " das contas do recorte")
+		lineageTag: a2ee2ef0-2e8f-5385-b66a-aa4831048852
+
+	measure 'Unidades no recorte' = COALESCE(DISTINCTCOUNT(FatoContas[Unidade]), 0)
+		formatString: #,0
+		lineageTag: a73a9741-7e3c-56dd-a038-348b06eb1d4f
+
+	/// Pares distintos de unidade e subunidade.
+	measure 'Subunidades no recorte' = COALESCE(DISTINCTCOUNT(FatoContas[OrganizacaoKey]), 0)
+		formatString: #,0
+		lineageTag: 3cc2e1cc-bbda-57d0-91f7-773309d9414b
+
+	/// Combinação para análise. Não comprova redundância ou irregularidade.
+	measure 'E5 e F3 simultâneos' = COALESCE(CALCULATE(COUNTROWS(FatoContas), FatoContas[M365 E5] = 1, FatoContas[M365 F3] = 1), 0)
+		formatString: #,0
+		lineageTag: a7189d05-082c-5424-9d9c-50bd608c81c9
+
+	measure 'Nota da combinação' = FORMAT([E5 e F3 simultâneos], "#,0") & " contas com E5 + F3 simultâneos · conferir contexto e regras contratuais antes de agir."
+		lineageTag: f2c0ab32-ebf2-5b86-a970-8a3a5bb3d573
+
+	measure 'Orientação de subunidades' = IF(HASONEVALUE(DimOrganizacao[Unidade]), "Detalhe de " & SELECTEDVALUE(DimOrganizacao[Unidade]), "Selecione uma unidade na tabela ou no filtro acima")
+		lineageTag: dbb5d1d2-4460-5531-9f08-17934e1dcc11
+
+	measure 'Contas exibidas' = IF([Contas na base] > 0, [Contas na base])
+		formatString: #,0
+		lineageTag: 7d05f7a2-2f7a-540b-92a0-36fb37521673
+
+	measure 'Licenças exibidas' = IF([Contas na base] > 0, [Licenças atribuídas])
+		formatString: #,0
+		lineageTag: 0d607874-1c3e-5fb1-8318-105fdbfd9869
+
+	measure 'Copilot exibido' = IF([Contas na base] > 0, [Adoção de Copilot])
+		formatString: 0.0%
+		lineageTag: 92172403-3247-5051-bfd6-5a7bac7e39a7
+
+	measure 'Revisão exibida' = IF([Contas na base] > 0, [Contas para revisão])
+		formatString: #,0
+		lineageTag: f7f4e041-3b3b-52f9-9061-8617c3e88a6c
+
+	measure 'Taxa exibida' = IF([Contas na base] > 0, [Taxa de revisão])
+		formatString: 0.0%
+		lineageTag: 0ad2cace-916b-52b8-964e-e1c3053e5635
+
+	measure 'Contas da subunidade' = IF(HASONEFILTER(DimOrganizacao[Unidade]) && [Contas na base] > 0, [Contas na base])
+		formatString: #,0
+		lineageTag: b130b47b-4a92-5f6e-b867-027fa9a2edba
+
+	measure 'Licenças da subunidade' = IF(HASONEFILTER(DimOrganizacao[Unidade]) && [Contas na base] > 0, [Licenças atribuídas])
+		formatString: #,0
+		lineageTag: 9a7b53c3-f3a1-5b0a-bcc8-475f96debca0
+
+	measure 'Revisão da subunidade' = IF(HASONEFILTER(DimOrganizacao[Unidade]) && [Contas na base] > 0, [Contas para revisão])
+		formatString: #,0
+		lineageTag: 7e44a73c-8b96-51ad-b6d9-845e7286b42e
+
+	/// Até dez unidades dentro dos filtros ativos; desempate pelo nome.
+	measure 'Top 10 unidades' = VAR Ranking = TOPN(10, FILTER(ALLSELECTED(DimOrganizacao[Unidade]), CALCULATE([Licenças atribuídas]) > 0), [Licenças atribuídas], DESC, DimOrganizacao[Unidade], ASC) RETURN IF(CONTAINS(Ranking, DimOrganizacao[Unidade], SELECTEDVALUE(DimOrganizacao[Unidade])), [Licenças atribuídas])
+		formatString: #,0
+		lineageTag: 8bb1f653-26c9-56d3-85b0-7f47c80e734b
+
+	/// Até dez unidades dentro dos filtros ativos; desempate pelo nome.
+	measure 'Top 10 revisão' = VAR Ranking = TOPN(10, FILTER(ALLSELECTED(DimOrganizacao[Unidade]), CALCULATE([Contas para revisão]) > 0), [Contas para revisão], DESC, DimOrganizacao[Unidade], ASC) RETURN IF(CONTAINS(Ranking, DimOrganizacao[Unidade], SELECTEDVALUE(DimOrganizacao[Unidade])), [Contas para revisão])
+		formatString: #,0
+		lineageTag: 52b3cf24-ecd5-5502-bc03-8c30b6c3efa2
+
+	column Valor
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 75fae3ae-b20e-53da-9064-7af1a05447fe
+		summarizeBy: none
+		sourceColumn: Valor
+
+	partition Indicadores = m
+		mode: import
+		source = #table(type table [Valor = Int64.Type], {{0}})
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,64 @@
+table FatoLicencas
+	lineageTag: b519ad36-29b4-5925-934a-511d69119777
+
+	column UPN
+		dataType: string
+		isHidden
+		lineageTag: a3411f17-bdf3-5d99-af40-fa52b07ec1af
+		summarizeBy: none
+		sourceColumn: UPN
+
+	column OrganizacaoKey
+		dataType: string
+		isHidden
+		lineageTag: bd6b26c6-6c87-5dce-a9da-0f9ce2c7477d
+		summarizeBy: none
+		sourceColumn: OrganizacaoKey
+
+	column Qualidade
+		dataType: string
+		isHidden
+		lineageTag: f9b50b51-0c6a-595d-9d18-d15d3090f00c
+		summarizeBy: none
+		sourceColumn: Qualidade
+
+	column Empresa
+		dataType: string
+		isHidden
+		lineageTag: ed00b4d2-f56e-56fb-9d3b-f52d6764c6f0
+		summarizeBy: none
+		sourceColumn: Empresa
+
+	column Produtos
+		dataType: string
+		isHidden
+		lineageTag: 7edf886d-e3c1-5c8e-9de0-e4df09753be1
+		summarizeBy: none
+		sourceColumn: Produtos
+
+	column Produto
+		dataType: string
+		isHidden
+		lineageTag: 005b35c7-f69f-57d3-b1a9-6b758939e652
+		summarizeBy: none
+		sourceColumn: Produto
+
+	column Quantidade
+		dataType: int64
+		formatString: 0
+		lineageTag: eea1553c-47f6-5802-b18b-f61219802918
+		summarizeBy: sum
+		sourceColumn: Quantidade
+
+	partition FatoLicencas = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.SelectColumns(FatoContas, {"UPN", "OrganizacaoKey", "Qualidade", "Empresa", "Produtos", "M365 E5", "M365 F3", "Copilot", "M365 F5 Security"}),
+				    ProdutosEmLinhas = Table.Unpivot(Fonte, {"M365 E5", "M365 F3", "Copilot", "M365 F5 Security"}, "Produto", "Quantidade"),
+				    Atribuidas = Table.SelectRows(ProdutosEmLinhas, each [Quantidade] = 1),
+				    Tipos = Table.TransformColumnTypes(Atribuidas, {{"Quantidade", Int64.Type}})
+				in
+				    Tipos
+
+	annotation PBI_ResultType = Table

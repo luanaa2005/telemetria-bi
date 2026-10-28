@@ -1,0 +1,36 @@
+table DimVinculo
+	lineageTag: a07adfa6-13df-5561-a811-5b375f7c2c65
+
+	column Qualidade
+		dataType: string
+		isHidden
+		lineageTag: 2a35fa23-410e-5109-a16a-62c70a691276
+		summarizeBy: none
+		sourceColumn: Qualidade
+
+	column Vínculo
+		dataType: string
+		lineageTag: 94eb3a59-2fd1-5aba-bfea-cafa58a4d469
+		summarizeBy: none
+		sourceColumn: Vínculo
+		sortByColumn: Ordem
+
+	column Ordem
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d6a23405-87e5-541a-ae36-7621096150a0
+		summarizeBy: none
+		sourceColumn: Ordem
+
+	partition DimVinculo = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.Distinct(Table.SelectColumns(telemetria, {"Qualidade"})),
+				    ComNome = Table.AddColumn(Fonte, "Vínculo", each if [Qualidade] = "AUTORIDADE" then "Autoridades" else if [Qualidade] = "SERVIDOR" then "Servidores" else if [Qualidade] = "TERCEIRIZADO" then "Terceirizados" else if [Qualidade] = "ESTAGIARIO" then "Estagiários" else if [Qualidade] = "NAO_CLASSIFICADO" then "Não classificado" else Text.Proper([Qualidade]), type text),
+				    ComOrdem = Table.AddColumn(ComNome, "Ordem", each if [Qualidade] = "AUTORIDADE" then 1 else if [Qualidade] = "SERVIDOR" then 2 else if [Qualidade] = "TERCEIRIZADO" then 3 else if [Qualidade] = "ESTAGIARIO" then 4 else 5, Int64.Type)
+				in
+				    ComOrdem
+
+	annotation PBI_ResultType = Table

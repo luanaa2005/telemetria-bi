@@ -1,0 +1,27 @@
+table DimProduto
+	lineageTag: 6ada3c5a-3cf6-5d2c-9b0b-0256393aaa7d
+
+	column Produto
+		dataType: string
+		lineageTag: 8c276953-6f28-564e-ba1e-f9042f5accd6
+		summarizeBy: none
+		sourceColumn: Produto
+		sortByColumn: Ordem
+
+	column Ordem
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e282967d-32ad-5511-90ed-cb99826196fa
+		summarizeBy: none
+		sourceColumn: Ordem
+
+	partition DimProduto = m
+		mode: import
+		source =
+				#table(
+				    type table [Produto = text, Ordem = Int64.Type],
+				    {{"M365 E5", 1}, {"M365 F3", 2}, {"Copilot", 3}, {"M365 F5 Security", 4}}
+				)
+
+	annotation PBI_ResultType = Table
