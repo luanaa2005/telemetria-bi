@@ -9,6 +9,26 @@ Esta pasta é independente: nada aqui lê ou escreve dentro de
 `telemetria.Report/` ou `telemetria.SemanticModel/`. O projeto do Power BI
 continua funcionando exatamente como antes.
 
+## Esta é uma alternativa, não um espelho
+
+O port foi feito a partir do modelo semântico como ele existia no commit
+`dbbcbcc`, com as tabelas `Visão Gerencial`, `Alocação por unidade`,
+`AlocacaoPessoas`, `Pessoas por vínculo`, `Preços` e `dim Nível`.
+
+Logo depois, o PR #1 (`codex/painel-licencas-redesenho`) reescreveu o modelo
+num esquema estrela — `FatoContas`, `FatoLicencas`, as tabelas `Dim*` e
+`Indicadores`. **Nenhuma das tabelas que este dashboard espelha existe mais.**
+
+Isso não quebra nada: o gerador lê o CSV direto e nunca dependeu dos `.tmdl` em
+tempo de execução. Mas duas consequências valem registro:
+
+- As referências a medidas e tabelas neste documento descrevem o modelo antigo.
+  Servem para explicar de onde vieram as regras de negócio, não para comparar
+  com o relatório atual.
+- O modelo novo **não calcula custo** — a tabela `Preços` foi removida e nada a
+  substituiu. Enquanto isso não mudar, este dashboard é o único lugar do
+  projeto que converte licenças em reais, usando as constantes abaixo.
+
 ## Como gerar
 
 ```bash
