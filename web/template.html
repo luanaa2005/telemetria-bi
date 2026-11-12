@@ -1,0 +1,2114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Telemetria de licenças M365</title>
+<style>
+/* ===========================================================================
+   Tokens. Os valores de série/status vêm de uma paleta validada para
+   daltonismo e contraste — não troque hex isolado sem revalidar o conjunto.
+   =========================================================================== */
+:root {
+  color-scheme: light;
+  --plano:          #f9f9f7;
+  --superficie:     #fcfcfb;
+  --tinta:          #0b0b0b;
+  --tinta-2:        #52514e;
+  --tinta-3:        #898781;
+  --grade:          #e1e0d9;
+  --eixo:           #c3c2b7;
+  --borda:          rgba(11, 11, 11, .10);
+  --realce:         rgba(11, 11, 11, .04);
+
+  --serie-1:        #2a78d6;
+  --serie-2:        #008300;
+  --serie-3:        #e87ba4;
+  --serie-4:        #eda100;
+  --neutra:         #c3c2b7;
+
+  --bom:            #0ca30c;
+  --atencao:        #fab219;
+  --critico:        #d03b3b;
+  --bom-tinta:      #006300;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --plano:        #0d0d0d;
+    --superficie:   #1a1a19;
+    --tinta:        #ffffff;
+    --tinta-2:      #c3c2b7;
+    --tinta-3:      #898781;
+    --grade:        #2c2c2a;
+    --eixo:         #383835;
+    --borda:        rgba(255, 255, 255, .10);
+    --realce:       rgba(255, 255, 255, .06);
+
+    --serie-1:      #3987e5;
+    --serie-2:      #008300;
+    --serie-3:      #d55181;
+    --serie-4:      #c98500;
+    --neutra:       #52514e;
+
+    --bom-tinta:    #0ca30c;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --plano:          #0d0d0d;
+  --superficie:     #1a1a19;
+  --tinta:          #ffffff;
+  --tinta-2:        #c3c2b7;
+  --tinta-3:        #898781;
+  --grade:          #2c2c2a;
+  --eixo:           #383835;
+  --borda:          rgba(255, 255, 255, .10);
+  --realce:         rgba(255, 255, 255, .06);
+
+  --serie-1:        #3987e5;
+  --serie-2:        #008300;
+  --serie-3:        #d55181;
+  --serie-4:        #c98500;
+  --neutra:         #52514e;
+
+  --bom-tinta:      #0ca30c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 24px 64px;
+  background: var(--plano);
+  color: var(--tinta);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- cabeçalho ----------------------------------------------------------- */
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 24px 0 16px;
+  border-bottom: 1px solid var(--borda);
+}
+.topo h1 { margin: 0; font-size: 20px; font-weight: 650; letter-spacing: -.01em; }
+.topo .meta { color: var(--tinta-3); font-size: 12px; margin-top: 2px; }
+.topo .espaco { flex: 1 1 auto; }
+
+/* --- controles ----------------------------------------------------------- */
+
+.controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 0;
+}
+.grupo { display: flex; align-items: center; gap: 8px; }
+.grupo > .rotulo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+}
+.segmentado { display: flex; border: 1px solid var(--borda); border-radius: 8px; overflow: hidden; }
+.segmentado button {
+  appearance: none;
+  border: 0;
+  border-right: 1px solid var(--borda);
+  background: var(--superficie);
+  color: var(--tinta-2);
+  font: inherit;
+  font-size: 13px;
+  padding: 7px 14px;
+  cursor: pointer;
+}
+.segmentado button:last-child { border-right: 0; }
+.segmentado button:hover { background: var(--realce); color: var(--tinta); }
+.segmentado button[aria-pressed="true"],
+.segmentado button[aria-selected="true"] {
+  background: var(--serie-1);
+  color: #fff;
+  font-weight: 600;
+}
+.segmentado button:focus-visible { outline: 2px solid var(--serie-1); outline-offset: -2px; }
+
+.botao-leve {
+  appearance: none;
+  border: 1px solid var(--borda);
+  border-radius: 7px;
+  background: var(--superficie);
+  color: var(--tinta-2);
+  font: inherit;
+  font-size: 12px;
+  padding: 5px 11px;
+  cursor: pointer;
+}
+.botao-leve:hover { background: var(--realce); color: var(--tinta); }
+.botao-leve[aria-pressed="true"] { border-color: var(--serie-1); color: var(--serie-1); }
+
+/* --- grade da página ----------------------------------------------------- */
+
+.pagina[hidden] { display: none; }
+.faixa {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  margin-bottom: 12px;
+}
+.lado-a-lado {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  margin-bottom: 12px;
+}
+
+/* --- tiles --------------------------------------------------------------- */
+
+.tile {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.tile .rotulo {
+  font-size: 12px;
+  color: var(--tinta-2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tile .valor {
+  margin-top: 6px;
+  font-size: 28px;
+  font-weight: 650;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+}
+.tile .nota { margin-top: 4px; font-size: 11px; color: var(--tinta-3); }
+.tile.heroi { grid-column: span 2; }
+.tile.heroi .valor { font-size: 48px; }
+@media (max-width: 640px) { .tile.heroi { grid-column: span 1; } .tile.heroi .valor { font-size: 34px; } }
+
+.ponto { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
+
+.tile .delta { margin-top: 5px; font-size: 12px; font-weight: 600; color: var(--tinta-2); }
+.tile .delta.bom { color: var(--bom-tinta); }
+.tile .delta.ruim { color: var(--critico); }
+
+/* --- simulador de cenário ------------------------------------------------ */
+
+.cenario { margin-bottom: 12px; }
+.opcoes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-top: 12px;
+}
+.opcao {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 13px;
+  border: 1px solid var(--borda);
+  border-radius: 9px;
+  cursor: pointer;
+}
+.opcao:hover { background: var(--realce); }
+.opcao:has(input:checked) { border-color: var(--serie-1); }
+.opcao:has(input:focus-visible) { outline: 2px solid var(--serie-1); outline-offset: 2px; }
+.opcao input { margin: 2px 0 0; width: 16px; height: 16px; accent-color: var(--serie-1); flex: 0 0 auto; }
+.opcao .nome { font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.opcao .detalhe { margin-top: 3px; font-size: 12px; color: var(--tinta-3); }
+.opcao .cifra { margin-top: 5px; font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums; }
+
+/* --- cartão de gráfico --------------------------------------------------- */
+
+.cartao {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 16px;
+  min-width: 0;
+}
+.cartao > header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.cartao h2 { margin: 0; font-size: 14px; font-weight: 650; }
+.cartao .sub { margin: 2px 0 0; font-size: 12px; color: var(--tinta-3); }
+.cartao > header .espaco { flex: 1 1 auto; }
+.nota-kpi { margin: -4px 0 12px; font-size: 12px; color: var(--tinta-3); max-width: 90ch; }
+
+.legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 12px 0 4px;
+  font-size: 12px;
+  color: var(--tinta-2);
+}
+.legenda span { display: flex; align-items: center; gap: 6px; }
+.legenda i { width: 11px; height: 11px; border-radius: 3px; flex: 0 0 auto; }
+
+.tela { margin-top: 8px; }
+.tela svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tela text { fill: var(--tinta-2); }
+.tela .rot-cat { font-size: 12px; }
+.tela .rot-val { font-size: 12px; font-weight: 600; fill: var(--tinta); }
+.tela .rot-eixo { font-size: 11px; fill: var(--tinta-3); font-variant-numeric: tabular-nums; }
+.tela .grade { stroke: var(--grade); stroke-width: 1; }
+.tela .eixo { stroke: var(--eixo); stroke-width: 1; }
+.tela .ref { stroke: var(--tinta-3); stroke-width: 1; }
+.tela .alvo { fill: transparent; cursor: default; }
+.tela .cruz { stroke: var(--eixo); stroke-width: 1; opacity: 0; }
+.tela g.faixa:hover .cruz, .tela g.faixa:focus-within .cruz { opacity: 1; }
+.tela .anel { stroke: var(--superficie); stroke-width: 2; }
+.tela .marca { transition: opacity .12s; }
+.tela g.esmaecido .marca { opacity: .35; }
+
+.vazio { padding: 32px 0; text-align: center; color: var(--tinta-3); font-size: 13px; }
+
+/* --- tabelas ------------------------------------------------------------- */
+
+.rolagem { overflow-x: auto; margin-top: 8px; }
+table.dados {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+table.dados th, table.dados td {
+  text-align: right;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--borda);
+  white-space: nowrap;
+}
+table.dados th:first-child, table.dados td:first-child,
+table.dados th.texto, table.dados td.texto { text-align: left; }
+table.dados thead th {
+  position: sticky;
+  top: 0;
+  background: var(--superficie);
+  color: var(--tinta-2);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--eixo);
+}
+table.dados thead th[data-ordenavel] { cursor: pointer; user-select: none; }
+table.dados thead th[data-ordenavel]:hover { color: var(--tinta); }
+table.dados thead th[aria-sort] { color: var(--serie-1); }
+table.dados tbody tr:hover { background: var(--realce); }
+table.dados td.nulo { color: var(--tinta-3); }
+
+.selo {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* --- dica (tooltip) ------------------------------------------------------ */
+
+#dica {
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .1s;
+  background: var(--superficie);
+  color: var(--tinta);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .18);
+  padding: 9px 11px;
+  font-size: 12px;
+  max-width: 280px;
+}
+#dica.ativa { opacity: 1; }
+#dica .cab { font-weight: 650; margin-bottom: 6px; }
+#dica .linha { display: flex; align-items: baseline; gap: 8px; margin-top: 3px; }
+#dica .linha i { width: 10px; height: 2px; border-radius: 1px; flex: 0 0 auto; position: relative; top: -3px; }
+#dica .linha .n { font-weight: 650; font-variant-numeric: tabular-nums; margin-left: auto; }
+#dica .linha .s { color: var(--tinta-2); }
+
+footer.rodape {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--borda);
+  color: var(--tinta-3);
+  font-size: 12px;
+}
+footer.rodape p { margin: 4px 0; }
+
+@media print {
+  body { padding: 0; background: #fff; }
+  .controles, .botao-leve, #dica { display: none !important; }
+  .pagina[hidden] { display: block !important; }
+  .cartao, .tile { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="topo">
+  <div>
+    <h1>Telemetria de licenças M365</h1>
+    <div class="meta" id="meta"></div>
+  </div>
+  <div class="espaco"></div>
+  <button class="botao-leve" id="btn-tema" type="button">Tema escuro</button>
+</div>
+
+<div class="controles">
+  <div class="grupo">
+    <span class="rotulo">Página</span>
+    <div class="segmentado" role="tablist" id="abas">
+      <button type="button" role="tab" data-pagina="gerencial" aria-selected="true">Visão Gerencial</button>
+      <button type="button" role="tab" data-pagina="alocacao" aria-selected="false">Alocação por Unidade</button>
+      <button type="button" role="tab" data-pagina="economia" aria-selected="false">Economia potencial</button>
+      <button type="button" role="tab" data-pagina="evolucao" aria-selected="false">Evolução</button>
+      <button type="button" role="tab" data-pagina="fornecedores" aria-selected="false">Terceiros</button>
+    </div>
+  </div>
+  <div class="grupo">
+    <span class="rotulo">Nível</span>
+    <div class="segmentado" id="filtro-nivel">
+      <button type="button" data-nivel="" aria-pressed="true">Todos</button>
+      <button type="button" data-nivel="UNIDADE" aria-pressed="false">Unidade</button>
+      <button type="button" data-nivel="SUBUNIDADE" aria-pressed="false">Subunidade</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== página 1: Visão Gerencial ===================== -->
+<section class="pagina" id="pag-gerencial">
+  <div class="faixa" id="kpis-gerencial"></div>
+  <div class="faixa" id="kpis-licencas"></div>
+
+  <div class="lado-a-lado">
+    <div class="cartao">
+      <header>
+        <div>
+          <h2>Licenças por vínculo e unidade</h2>
+          <p class="sub">Soma de licenças M365 E5, Copilot, F3 e F5 Security. Ordenado pelo total.</p>
+        </div>
+        <div class="espaco"></div>
+        <button class="botao-leve" type="button" data-tabela="g-vinculo" aria-pressed="false">Tabela</button>
+      </header>
+      <div class="legenda" id="leg-vinculo"></div>
+      <div class="tela" id="g-vinculo"></div>
+    </div>
+
+    <div class="cartao">
+      <header>
+        <div>
+          <h2>Licenças ociosas por unidade</h2>
+          <p class="sub">Pessoas com E5 ou Copilot e situação funcional inativa ou não informada.</p>
+        </div>
+        <div class="espaco"></div>
+        <button class="botao-leve" type="button" data-tabela="g-ociosas" aria-pressed="false">Tabela</button>
+      </header>
+      <div class="tela" id="g-ociosas"></div>
+    </div>
+  </div>
+
+  <div class="cartao" style="margin-bottom:12px">
+    <header>
+      <div>
+        <h2>Composição das licenças premium</h2>
+        <p class="sub">Cada pessoa com E5 ou Copilot classificada pela situação funcional.</p>
+      </div>
+    </header>
+    <div class="tela" id="g-composicao"></div>
+  </div>
+
+  <div class="cartao">
+    <header>
+      <div>
+        <h2>Detalhe por unidade e subunidade</h2>
+        <p class="sub" id="sub-tab-gerencial"></p>
+      </div>
+    </header>
+    <div class="rolagem" id="tab-gerencial"></div>
+  </div>
+</section>
+
+<!-- ================== página 2: Alocação por Unidade =================== -->
+<section class="pagina" id="pag-alocacao" hidden>
+  <div class="faixa" id="kpis-alocacao"></div>
+  <p class="sub nota-kpi">Os cards acima consideram apenas linhas de nível UNIDADE e não
+     respondem ao filtro, igual às medidas do modelo atual. Gráficos e tabela abaixo
+     respondem ao filtro.</p>
+
+  <div class="lado-a-lado">
+    <div class="cartao">
+      <header>
+        <div>
+          <h2>E5 em terceiros x restante, por unidade</h2>
+          <p class="sub">Os dois segmentos somam o total de E5 da unidade.</p>
+        </div>
+        <div class="espaco"></div>
+        <button class="botao-leve" type="button" data-tabela="g-terceiros" aria-pressed="false">Tabela</button>
+      </header>
+      <div class="legenda" id="leg-terceiros"></div>
+      <div class="tela" id="g-terceiros"></div>
+    </div>
+
+    <div class="cartao">
+      <header>
+        <div>
+          <h2>% de E5 alocado em terceiros</h2>
+          <p class="sub">Faixas: até 25% ok, 25–50% atenção, acima de 50% crítico.</p>
+        </div>
+        <div class="espaco"></div>
+        <button class="botao-leve" type="button" data-tabela="g-pct" aria-pressed="false">Tabela</button>
+      </header>
+      <div class="tela" id="g-pct"></div>
+    </div>
+  </div>
+
+  <div class="cartao">
+    <header>
+      <div>
+        <h2>Alocação e custo por unidade e subunidade</h2>
+        <p class="sub" id="sub-tab-alocacao"></p>
+      </div>
+    </header>
+    <div class="rolagem" id="tab-alocacao"></div>
+  </div>
+</section>
+
+<!-- ===================== página 3: Economia potencial ================== -->
+<section class="pagina" id="pag-economia" hidden>
+  <div class="cartao cenario">
+    <header>
+      <div>
+        <h2>Cenário de revogação</h2>
+        <p class="sub">Marque o que entraria numa limpeza de licenças. Tudo abaixo recalcula na hora.</p>
+      </div>
+    </header>
+    <div class="opcoes" id="opcoes-cenario"></div>
+  </div>
+
+  <div class="faixa" id="kpis-economia"></div>
+  <p class="sub nota-kpi" id="nota-economia"></p>
+
+  <div class="lado-a-lado">
+    <div class="cartao">
+      <header>
+        <div>
+          <h2>Economia anual por unidade</h2>
+          <p class="sub">Quanto cada unidade devolve ao orçamento no cenário marcado.</p>
+        </div>
+        <div class="espaco"></div>
+        <button class="botao-leve" type="button" data-tabela="g-economia" aria-pressed="false">Tabela</button>
+      </header>
+      <div class="tela" id="g-economia"></div>
+    </div>
+
+    <div class="cartao">
+      <header>
+        <div>
+          <h2>Licenças desperdiçadas por motivo</h2>
+          <p class="sub">Cada licença aparece em um motivo só, na ordem conta desabilitada → inativo → não informado.</p>
+        </div>
+        <div class="espaco"></div>
+        <button class="botao-leve" type="button" data-tabela="g-motivos" aria-pressed="false">Tabela</button>
+      </header>
+      <div class="legenda" id="leg-motivos"></div>
+      <div class="tela" id="g-motivos"></div>
+    </div>
+  </div>
+
+  <div class="cartao">
+    <header>
+      <div>
+        <h2>Onde agir primeiro</h2>
+        <p class="sub" id="sub-tab-economia"></p>
+      </div>
+    </header>
+    <div class="rolagem" id="tab-economia"></div>
+  </div>
+</section>
+
+<!-- ======================= página 4: Evolução ========================== -->
+<section class="pagina" id="pag-evolucao" hidden>
+  <div class="faixa" id="kpis-evolucao"></div>
+  <p class="sub nota-kpi" id="nota-evolucao"></p>
+
+  <div class="lado-a-lado">
+    <div class="cartao">
+      <header>
+        <div>
+          <h2>Licenças por produto, a cada coleta</h2>
+          <p class="sub">Uma linha por produto. Passe o mouse ou use Tab para ler os valores.</p>
+        </div>
+        <div class="espaco"></div>
+        <button class="botao-leve" type="button" data-tabela="g-hist-lic" aria-pressed="false">Tabela</button>
+      </header>
+      <div class="legenda" id="leg-hist-lic"></div>
+      <div class="tela" id="g-hist-lic"></div>
+    </div>
+
+    <div class="cartao">
+      <header>
+        <div>
+          <h2>Custo anual x desperdício</h2>
+          <p class="sub">Quanto o parque custa por ano e quanto disso está parado.</p>
+        </div>
+        <div class="espaco"></div>
+        <button class="botao-leve" type="button" data-tabela="g-hist-custo" aria-pressed="false">Tabela</button>
+      </header>
+      <div class="legenda" id="leg-hist-custo"></div>
+      <div class="tela" id="g-hist-custo"></div>
+    </div>
+  </div>
+
+  <div class="cartao">
+    <header>
+      <div>
+        <h2>Coletas</h2>
+        <p class="sub" id="sub-tab-evolucao"></p>
+      </div>
+    </header>
+    <div class="rolagem" id="tab-evolucao"></div>
+  </div>
+</section>
+
+<!-- =================== página 5: Terceiros e fornecedores ============== -->
+<section class="pagina" id="pag-fornecedores" hidden>
+  <div class="faixa" id="kpis-fornecedores"></div>
+
+  <div class="lado-a-lado">
+    <div class="cartao">
+      <header>
+        <div>
+          <h2>Custo anual por empresa</h2>
+          <p class="sub">E5 e Copilot das pessoas terceirizadas, pelo preço unitário do contrato.</p>
+        </div>
+        <div class="espaco"></div>
+        <button class="botao-leve" type="button" data-tabela="g-forn-custo" aria-pressed="false">Tabela</button>
+      </header>
+      <div class="tela" id="g-forn-custo"></div>
+    </div>
+
+    <div class="cartao">
+      <header>
+        <div>
+          <h2>Situação das pessoas por empresa</h2>
+          <p class="sub">Conta desabilitada ou situação inativa com licença ativa é devolução imediata.</p>
+        </div>
+        <div class="espaco"></div>
+        <button class="botao-leve" type="button" data-tabela="g-forn-sit" aria-pressed="false">Tabela</button>
+      </header>
+      <div class="legenda" id="leg-forn-sit"></div>
+      <div class="tela" id="g-forn-sit"></div>
+    </div>
+  </div>
+
+  <div class="cartao">
+    <header>
+      <div>
+        <h2>Detalhe por empresa</h2>
+        <p class="sub" id="sub-tab-fornecedores"></p>
+      </div>
+    </header>
+    <div class="rolagem" id="tab-fornecedores"></div>
+  </div>
+</section>
+
+<footer class="rodape">
+  <p id="rodape-fonte"></p>
+  <p id="rodape-modo"></p>
+  <p>Contém apenas números agregados por unidade, subunidade, empresa e data de coleta —
+     nenhum nome, UPN ou dado pessoal.</p>
+</footer>
+
+<div id="dica" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* Preenchido pelo gerar_dashboard.py: o JSON inteiro no modo embutido, ou
+   null no modo externo, em que os dados vêm de dados.json ao abrir a página. */
+let DADOS = /*{{DADOS}}*/;
+
+/* ========================================================================
+   Formatação
+   ======================================================================== */
+
+const fmtInt = new Intl.NumberFormat("pt-BR");
+const fmtMoeda = new Intl.NumberFormat("pt-BR", {
+  style: "currency", currency: "BRL", maximumFractionDigits: 0,
+});
+
+const num = (v) => fmtInt.format(Math.round(v || 0));
+const moeda = (v) => fmtMoeda.format(Math.round(v || 0));
+const pct = (v) => Math.round((v || 0) * 100) + "%";
+
+/* Divisão protegida, equivalente ao DIVIDE do DAX. */
+const divide = (a, b) => (b ? a / b : 0);
+
+/* ========================================================================
+   Estado e filtro
+   ======================================================================== */
+
+const estado = { pagina: "gerencial", nivel: "" };
+
+/* O filtro de Nível escopa tudo abaixo dele, como o slicer do relatório. */
+const filtrar = (linhas) =>
+  estado.nivel ? linhas.filter((l) => l.nivel === estado.nivel) : linhas;
+
+/**
+ * Agrupa linhas por Unidade somando os campos pedidos.
+ * Equivale ao eixo Unidade dos gráficos, que agrega as subunidades.
+ */
+function porUnidade(linhas, campos) {
+  const mapa = new Map();
+  for (const linha of linhas) {
+    let alvo = mapa.get(linha.unidade);
+    if (!alvo) {
+      alvo = { unidade: linha.unidade };
+      for (const c of campos) alvo[c] = 0;
+      mapa.set(linha.unidade, alvo);
+    }
+    for (const c of campos) alvo[c] += linha[c] || 0;
+  }
+  return [...mapa.values()];
+}
+
+const somar = (linhas, campo) => linhas.reduce((t, l) => t + (l[campo] || 0), 0);
+
+/* ========================================================================
+   Paleta — leitura dos tokens CSS (um lugar só, troca com o tema)
+   ======================================================================== */
+
+function token(nome) {
+  return getComputedStyle(document.documentElement).getPropertyValue(nome).trim();
+}
+
+const CORES = {};
+function recarregarCores() {
+  Object.assign(CORES, {
+    serie1: token("--serie-1"),
+    serie2: token("--serie-2"),
+    serie3: token("--serie-3"),
+    serie4: token("--serie-4"),
+    neutra: token("--neutra"),
+    superficie: token("--superficie"),
+    bom: token("--bom"),
+    atencao: token("--atencao"),
+    critico: token("--critico"),
+  });
+}
+
+/* Faixas da medida "% E5 Terceiros Color". Status sempre acompanhado de
+   rótulo visível — a cor nunca carrega o significado sozinha. */
+function faixaPct(valor) {
+  if (valor >= DADOS.limiteCritico) return { cor: CORES.critico, nome: "crítico" };
+  if (valor >= DADOS.limiteAtencao) return { cor: CORES.atencao, nome: "atenção" };
+  return { cor: CORES.bom, nome: "ok" };
+}
+
+/* ========================================================================
+   Helpers de DOM e SVG
+   ======================================================================== */
+
+function el(tag, attrs, pai) {
+  const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (pai) pai.appendChild(n);
+  return n;
+}
+
+function limpar(no) { while (no.firstChild) no.removeChild(no.firstChild); }
+
+/** Retângulo com cantos arredondados só na ponta direita (a ponta do dado). */
+function caminhoBarra(x, y, w, h, r) {
+  const raio = Math.max(0, Math.min(r, w, h / 2));
+  if (raio === 0) return `M${x},${y}h${w}v${h}h${-w}z`;
+  return `M${x},${y}h${w - raio}a${raio},${raio} 0 0 1 ${raio},${raio}` +
+         `v${h - 2 * raio}a${raio},${raio} 0 0 1 ${-raio},${raio}h${-(w - raio)}z`;
+}
+
+/**
+ * Encurta o texto de um <text> até caber em `limite`, com reticências.
+ * Mede o texto renderizado em vez de chutar por número de caracteres —
+ * um rótulo nunca pode vazar ou ser cortado pela borda do cartão.
+ */
+function encurtar(no, texto, limite) {
+  no.textContent = texto;
+  if (no.getComputedTextLength() <= limite) return;
+
+  let menor = 0, maior = texto.length;
+  while (menor < maior) {
+    const meio = Math.ceil((menor + maior) / 2);
+    no.textContent = texto.slice(0, meio) + "…";
+    if (no.getComputedTextLength() <= limite) menor = meio;
+    else maior = meio - 1;
+  }
+  no.textContent = texto.slice(0, menor).trimEnd() + "…";
+}
+
+/**
+ * Marcas "redondas" para o eixo de valores.
+ *
+ * A última marca sempre cobre o máximo — senão a maior barra ou o ponto mais
+ * alto da linha escapam do plot. Entre os passos possíveis, escolhe o que fica
+ * perto da quantidade desejada de marcas e sobra menos espaço no topo.
+ */
+function ticks(maximo, alvo = 4) {
+  if (maximo <= 0) return [0];
+
+  const mag = Math.pow(10, Math.floor(Math.log10(maximo / alvo)));
+  let melhor = null;
+  for (const m of [1, 2, 2.5, 5, 10]) {
+    const passo = m * mag;
+    const passos = Math.ceil(maximo / passo - 1e-9);
+    if (passos < 2 || passos > 8) continue;
+    const custo = Math.abs(passos - alvo) + (passos * passo - maximo) / maximo;
+    if (!melhor || custo < melhor.custo) melhor = { passo, passos, custo };
+  }
+  if (!melhor) {
+    const passo = mag || maximo;
+    melhor = { passo, passos: Math.max(1, Math.ceil(maximo / passo - 1e-9)) };
+  }
+
+  const saida = [];
+  for (let i = 0; i <= melhor.passos; i++) saida.push(i * melhor.passo);
+  return saida;
+}
+
+/* ========================================================================
+   Dica (tooltip). Nomes vêm do CSV, então entram sempre como texto.
+   ======================================================================== */
+
+const dica = document.getElementById("dica");
+
+function mostrarDica(evento, titulo, linhas) {
+  limpar(dica);
+  const cab = document.createElement("div");
+  cab.className = "cab";
+  cab.textContent = titulo;
+  dica.appendChild(cab);
+
+  for (const l of linhas) {
+    const div = document.createElement("div");
+    div.className = "linha";
+    if (l.cor) {
+      const i = document.createElement("i");
+      i.style.background = l.cor;
+      div.appendChild(i);
+    }
+    const s = document.createElement("span");
+    s.className = "s";
+    s.textContent = l.nome;
+    const n = document.createElement("span");
+    n.className = "n";
+    n.textContent = l.valor;
+    div.append(s, n);
+    dica.appendChild(div);
+  }
+
+  dica.classList.add("ativa");
+  posicionarDica(evento);
+}
+
+function posicionarDica(evento) {
+  const alvo = evento.currentTarget;
+  let x = evento.clientX, y = evento.clientY;
+  if (x === undefined || (x === 0 && y === 0)) {
+    const r = alvo.getBoundingClientRect();
+    x = r.right; y = r.top + r.height / 2;
+  }
+  const caixa = dica.getBoundingClientRect();
+  const margem = 14;
+  dica.style.left = Math.min(x + margem, innerWidth - caixa.width - 8) + "px";
+  dica.style.top = Math.max(8, Math.min(y - caixa.height / 2, innerHeight - caixa.height - 8)) + "px";
+}
+
+const esconderDica = () => dica.classList.remove("ativa");
+
+/**
+ * Liga dica + realce a uma marca. O alvo de clique é o retângulo invisível
+ * da faixa inteira, não os pixels pintados.
+ */
+function ligarDica(alvo, grupo, titulo, linhas) {
+  alvo.setAttribute("tabindex", "0");
+  alvo.setAttribute("role", "img");
+  alvo.setAttribute("aria-label", titulo + ": " + linhas.map((l) => l.nome + " " + l.valor).join(", "));
+
+  const entrar = (e) => {
+    mostrarDica(e, titulo, linhas);
+    if (grupo) grupo.parentNode.querySelectorAll("g.faixa").forEach((g) => {
+      if (g !== grupo) g.classList.add("esmaecido");
+    });
+  };
+  const sair = () => {
+    esconderDica();
+    if (grupo) grupo.parentNode.querySelectorAll("g.faixa").forEach((g) => g.classList.remove("esmaecido"));
+  };
+
+  alvo.addEventListener("pointerenter", entrar);
+  alvo.addEventListener("pointermove", posicionarDica);
+  alvo.addEventListener("pointerleave", sair);
+  alvo.addEventListener("focus", entrar);
+  alvo.addEventListener("blur", sair);
+}
+
+/* ========================================================================
+   Gráfico de barras horizontais (empilhado, simples ou por faixa de status)
+   ======================================================================== */
+
+const ALTURA_FAIXA = 30;   /* faixa reservada por categoria */
+const ESPESSURA = 18;      /* espessura da barra: ≤ 24px, o resto é ar */
+const VAO = 2;             /* vão da superfície entre segmentos que se tocam */
+const BANDA_EIXO = 26;     /* espaço do eixo de valores, dentro do container */
+
+/**
+ * cfg = {
+ *   linhas:   [{ rotulo, segmentos: [{nome, valor, cor}], fim?, faixa? }],
+ *   formato:  (v) => string,
+ *   max?:     number,            escala fixa (senão, o maior total)
+ *   refs?:    [{valor, rotulo}], linhas de referência verticais
+ *   semEixo?: boolean
+ * }
+ */
+function barras(host, cfg) {
+  limpar(host);
+
+  if (!cfg.linhas.length) {
+    const p = document.createElement("p");
+    p.className = "vazio";
+    p.textContent = "Sem dados para o filtro selecionado.";
+    host.appendChild(p);
+    return;
+  }
+
+  const largura = Math.max(host.clientWidth || 520, 320);
+  const estreito = largura < 520;
+  const gutter = Math.round(Math.min(estreito ? 108 : 168, largura * 0.33));
+
+  const totais = cfg.linhas.map((l) => l.segmentos.reduce((t, s) => t + s.valor, 0));
+  const max = cfg.max != null ? cfg.max : Math.max(1, ...totais);
+
+  const alturaPlot = cfg.linhas.length * ALTURA_FAIXA;
+  const altura = alturaPlot + (cfg.semEixo ? 4 : BANDA_EIXO);
+
+  const svg = el("svg", {
+    viewBox: `0 0 ${largura} ${altura}`,
+    width: largura, height: altura,
+    role: "group",
+  }, host);
+
+  /* A folga da direita sai do rótulo mais largo que de fato será desenhado —
+     "R$ 1.234.567" não cabe num vão fixo de 58px. */
+  const regua = el("text", { class: "rot-val", x: -9999, y: -9999 }, svg);
+  let maiorRotulo = 0;
+  cfg.linhas.forEach((linha, i) => {
+    regua.textContent = linha.fim != null ? linha.fim : cfg.formato(totais[i]);
+    maiorRotulo = Math.max(maiorRotulo, regua.getComputedTextLength());
+  });
+  svg.removeChild(regua);
+
+  const folgaFim = Math.min(Math.ceil(maiorRotulo) + 14, Math.round(largura * 0.4));
+  const x0 = gutter + 10;
+  const x1 = largura - folgaFim;
+  const faixaUtil = Math.max(40, x1 - x0);
+
+  /* Sem eixo, a barra usa a largura toda; com eixo, a escala vai até a última
+     marca, para que nenhuma linha de grade caia fora do plot. */
+  const marcas = cfg.semEixo ? [] : ticks(max);
+  const teto = marcas.length ? Math.max(marcas[marcas.length - 1], max) : max;
+  const escala = (v) => (v / teto) * faixaUtil;
+
+  /* --- grade e eixo (atrás das marcas) --- */
+  if (!cfg.semEixo) {
+    for (const t of marcas) {
+      const x = x0 + escala(t);
+      el("line", { class: "grade", x1: x, y1: 0, x2: x, y2: alturaPlot }, svg);
+      const rot = el("text", {
+        class: "rot-eixo", x, y: alturaPlot + 15, "text-anchor": "middle",
+      }, svg);
+      rot.textContent = cfg.formato(t);
+    }
+  }
+  el("line", { class: "eixo", x1: x0, y1: 0, x2: x0, y2: alturaPlot }, svg);
+
+  for (const ref of cfg.refs || []) {
+    const x = x0 + escala(ref.valor);
+    el("line", {
+      class: "ref", x1: x, y1: 0, x2: x, y2: alturaPlot, "stroke-dasharray": "0",
+    }, svg);
+    const rot = el("text", {
+      class: "rot-eixo", x, y: alturaPlot + 15, "text-anchor": "middle",
+    }, svg);
+    rot.textContent = ref.rotulo;
+  }
+
+  /* --- faixas --- */
+  cfg.linhas.forEach((linha, i) => {
+    const y = i * ALTURA_FAIXA;
+    const yBarra = y + (ALTURA_FAIXA - ESPESSURA) / 2;
+    const grupo = el("g", { class: "faixa" }, svg);
+
+    const rot = el("text", {
+      class: "rot-cat", x: gutter, y: y + ALTURA_FAIXA / 2 + 4, "text-anchor": "end",
+    }, grupo);
+    encurtar(rot, linha.rotulo, gutter - 6);
+    /* O nome completo continua acessível no title e na dica. */
+    const titulo = el("title", {}, rot);
+    titulo.textContent = linha.rotulo;
+
+    const visiveis = linha.segmentos.filter((s) => s.valor > 0);
+    let cursor = x0;
+    visiveis.forEach((seg, j) => {
+      const ultimo = j === visiveis.length - 1;
+      const bruta = escala(seg.valor);
+      const w = Math.max(1, bruta - (ultimo ? 0 : VAO));
+      el("path", {
+        class: "marca",
+        d: caminhoBarra(cursor, yBarra, w, ESPESSURA, ultimo ? 4 : 0),
+        fill: seg.cor,
+      }, grupo);
+      cursor += bruta;
+    });
+
+    /* Valor na ponta da barra — sempre fora dela, nunca cortado. */
+    const total = totais[i];
+    const fim = el("text", {
+      class: "rot-val",
+      x: Math.min(x0 + escala(total) + 8, largura - 4),
+      y: y + ALTURA_FAIXA / 2 + 4,
+    }, grupo);
+    fim.textContent = linha.fim != null ? linha.fim : cfg.formato(total);
+
+    /* Alvo de clique/hover: a faixa inteira. */
+    const alvo = el("rect", {
+      class: "alvo", x: 0, y, width: largura, height: ALTURA_FAIXA,
+    }, grupo);
+    ligarDica(
+      alvo, grupo, linha.rotulo,
+      (linha.dica || linha.segmentos.map((s) => ({
+        nome: s.nome, valor: cfg.formato(s.valor), cor: s.cor,
+      })))
+    );
+  });
+}
+
+/* ========================================================================
+   Gráfico de linhas no tempo
+   ======================================================================== */
+
+const ALTURA_PLOT = 230;
+const GUTTER_Y = 62;
+const BANDA_X = 30;
+
+/**
+ * cfg = {
+ *   pontos:  [{ rotulo, valores: {chave: número} }],
+ *   series:  [{ chave, nome, cor }],
+ *   formato: (v) => string,   para eixo e dica
+ *   curto?:  (v) => string,   versão compacta para o eixo Y
+ * }
+ */
+function linhaTempo(host, cfg) {
+  limpar(host);
+
+  if (cfg.pontos.length < 2) {
+    const p = document.createElement("p");
+    p.className = "vazio";
+    p.textContent = cfg.pontos.length
+      ? "Só uma coleta disponível. A série histórica aparece a partir da segunda."
+      : "Sem coletas para o filtro selecionado.";
+    host.appendChild(p);
+    return;
+  }
+
+  const largura = Math.max(host.clientWidth || 520, 320);
+  const curto = cfg.curto || cfg.formato;
+  const y0 = 8, y1 = ALTURA_PLOT;
+
+  let max = 0;
+  for (const p of cfg.pontos) {
+    for (const s of cfg.series) max = Math.max(max, p.valores[s.chave] || 0);
+  }
+  const marcas = ticks(max, 4);
+  const teto = Math.max(marcas[marcas.length - 1], 1);
+
+  const svg = el("svg", {
+    viewBox: `0 0 ${largura} ${ALTURA_PLOT + BANDA_X}`,
+    width: largura, height: ALTURA_PLOT + BANDA_X, role: "group",
+  }, host);
+
+  /* Mede os rótulos do eixo antes de fixar o gutter, pelo mesmo motivo das barras. */
+  const regua = el("text", { class: "rot-eixo", x: -9999, y: -9999 }, svg);
+  let maiorMarca = 0;
+  for (const t of marcas) {
+    regua.textContent = curto(t);
+    maiorMarca = Math.max(maiorMarca, regua.getComputedTextLength());
+  }
+  svg.removeChild(regua);
+
+  const x0 = Math.max(GUTTER_Y, Math.ceil(maiorMarca) + 14);
+  const x1 = largura - 16;
+
+  const px = (i) => x0 + (cfg.pontos.length === 1 ? 0 : (i / (cfg.pontos.length - 1)) * (x1 - x0));
+  const py = (v) => y1 - ((v || 0) / teto) * (y1 - y0);
+
+  /* grade horizontal + eixo de valores */
+  for (const t of marcas) {
+    const y = py(t);
+    el("line", { class: "grade", x1: x0, y1: y, x2: x1, y2: y }, svg);
+    const rot = el("text", { class: "rot-eixo", x: x0 - 8, y: y + 4, "text-anchor": "end" }, svg);
+    rot.textContent = curto(t);
+  }
+  el("line", { class: "eixo", x1: x0, y1: y0, x2: x0, y2: y1 }, svg);
+
+  /* Rótulos de data: com coleta diária não cabem todos, então mostra um a
+     cada `passo`. A última data entra sempre — é a que interessa — e por isso
+     expulsa a vizinha que ficaria colada nela. */
+  const ultimo = cfg.pontos.length - 1;
+  const passo = Math.ceil(cfg.pontos.length / Math.max(2, Math.floor((x1 - x0) / 78)));
+
+  const indices = [];
+  for (let i = 0; i < ultimo; i += passo) indices.push(i);
+  while (indices.length > 1 && ultimo - indices[indices.length - 1] < passo * 0.6) {
+    indices.pop();
+  }
+  indices.push(ultimo);
+
+  for (const i of indices) {
+    const rot = el("text", {
+      class: "rot-eixo", x: px(i), y: y1 + 18, "text-anchor": "middle",
+    }, svg);
+    rot.textContent = cfg.pontos[i].rotulo;
+  }
+
+  /* Espaçamento entre coletas: decide marcador visível e alvo de captura. */
+  const largFaixa = (x1 - x0) / Math.max(1, cfg.pontos.length - 1);
+
+  /* linhas e marcadores */
+  for (const s of cfg.series) {
+    const d = cfg.pontos
+      .map((p, i) => `${i ? "L" : "M"}${px(i)},${py(p.valores[s.chave])}`)
+      .join("");
+    el("path", {
+      class: "marca", d, fill: "none", stroke: s.cor,
+      "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round",
+    }, svg);
+
+    /* Com coleta diária os pontos chegam a ficar a 9px um do outro, e aí
+       marcador de 8px vira borrão. Abaixo do limiar, só a linha — o valor
+       continua na dica, no foco do teclado e na tabela. */
+    if (largFaixa >= 14) {
+      cfg.pontos.forEach((p, i) => {
+        el("circle", {
+          class: "marca anel", cx: px(i), cy: py(p.valores[s.chave]), r: 4, fill: s.cor,
+        }, svg);
+      });
+    }
+  }
+
+  /* Faixa de captura por coleta: serve ao mouse e ao teclado. As faixas
+     ladrilham o plot sem buraco, então o ponteiro sempre cai na coleta mais
+     próxima — é o que substitui o alvo mínimo de 24px quando há muitos pontos. */
+  cfg.pontos.forEach((p, i) => {
+    const grupo = el("g", { class: "faixa" }, svg);
+    const x = px(i);
+    el("line", { class: "cruz", x1: x, y1: y0, x2: x, y2: y1 }, grupo);
+    const alvo = el("rect", {
+      class: "alvo",
+      x: Math.max(0, x - largFaixa / 2), y: 0,
+      width: Math.max(1, largFaixa), height: ALTURA_PLOT + BANDA_X,
+    }, grupo);
+    ligarDica(alvo, null, p.rotulo, cfg.series.map((s) => ({
+      nome: s.nome, valor: cfg.formato(p.valores[s.chave]), cor: s.cor,
+    })));
+  });
+}
+
+/* ========================================================================
+   Legenda
+   ======================================================================== */
+
+function legenda(host, series) {
+  limpar(host);
+  for (const s of series) {
+    const span = document.createElement("span");
+    const i = document.createElement("i");
+    i.style.background = s.cor;
+    const t = document.createElement("span");
+    t.textContent = s.nome;
+    span.append(i, t);
+    host.appendChild(span);
+  }
+}
+
+/* ========================================================================
+   Tiles
+   ======================================================================== */
+
+/** t = { rotulo, valor, nota?, heroi?, cor?, estado? } */
+function tiles(host, lista) {
+  limpar(host);
+  for (const t of lista) {
+    const div = document.createElement("div");
+    div.className = "tile" + (t.heroi ? " heroi" : "");
+
+    const rotulo = document.createElement("div");
+    rotulo.className = "rotulo";
+    if (t.cor) {
+      const ponto = document.createElement("span");
+      ponto.className = "ponto";
+      ponto.style.background = t.cor;
+      rotulo.appendChild(ponto);
+    }
+    const txt = document.createElement("span");
+    txt.textContent = t.rotulo;
+    rotulo.appendChild(txt);
+
+    const valor = document.createElement("div");
+    valor.className = "valor";
+    valor.textContent = t.valor;
+
+    div.append(rotulo, valor);
+
+    if (t.delta) {
+      const delta = document.createElement("div");
+      delta.className = "delta" + (t.delta.bom === true ? " bom" : t.delta.bom === false ? " ruim" : "");
+      delta.textContent = t.delta.texto;
+      div.appendChild(delta);
+    }
+
+    if (t.nota) {
+      const nota = document.createElement("div");
+      nota.className = "nota";
+      nota.textContent = t.nota;
+      div.appendChild(nota);
+    }
+    host.appendChild(div);
+  }
+}
+
+/* ========================================================================
+   Tabelas
+   ======================================================================== */
+
+/**
+ * colunas = [{ titulo, campo, tipo: "texto"|"num"|"moeda"|"pct"|"selo" }]
+ * Ordenável no clique; o estado de ordenação é por tabela.
+ */
+function tabela(host, colunas, linhas, ordem) {
+  limpar(host);
+
+  const tab = document.createElement("table");
+  tab.className = "dados";
+
+  const thead = document.createElement("thead");
+  const tr = document.createElement("tr");
+  colunas.forEach((col) => {
+    const th = document.createElement("th");
+    th.textContent = col.titulo;
+    if (col.tipo === "texto" || col.tipo === "selo") th.className = "texto";
+    th.dataset.ordenavel = "1";
+    if (ordem && ordem.campo === col.campo) {
+      th.setAttribute("aria-sort", ordem.desc ? "descending" : "ascending");
+      th.textContent = col.titulo + (ordem.desc ? " ↓" : " ↑");
+    }
+    th.addEventListener("click", () => {
+      const mesmo = ordem && ordem.campo === col.campo;
+      const nova = { campo: col.campo, desc: mesmo ? !ordem.desc : col.tipo !== "texto" };
+      tabela(host, colunas, linhas, nova);
+    });
+    tr.appendChild(th);
+  });
+  thead.appendChild(tr);
+  tab.appendChild(thead);
+
+  const ordenadas = linhas.slice();
+  if (ordem) {
+    const { campo, desc } = ordem;
+    ordenadas.sort((a, b) => {
+      const x = a[campo], y = b[campo];
+      const r = typeof x === "string"
+        ? String(x).localeCompare(String(y), "pt-BR")
+        : (x || 0) - (y || 0);
+      return desc ? -r : r;
+    });
+  }
+
+  const tbody = document.createElement("tbody");
+  for (const linha of ordenadas) {
+    const tr = document.createElement("tr");
+    for (const col of colunas) {
+      const td = document.createElement("td");
+      const v = linha[col.campo];
+
+      if (col.tipo === "texto") {
+        td.className = "texto";
+        td.textContent = v || "—";
+        if (!v) td.classList.add("nulo");
+      } else if (col.tipo === "selo") {
+        td.className = "texto";
+        const selo = document.createElement("span");
+        selo.className = "selo";
+        const ponto = document.createElement("span");
+        ponto.className = "ponto";
+        ponto.style.background = v === "OK" ? CORES.bom : CORES.atencao;
+        const txt = document.createElement("span");
+        txt.textContent = v;
+        selo.append(ponto, txt);
+        td.appendChild(selo);
+      } else if (col.tipo === "moeda") {
+        td.textContent = moeda(v);
+      } else if (col.tipo === "pct") {
+        td.textContent = pct(v);
+      } else {
+        td.textContent = num(v);
+        if (!v) td.classList.add("nulo");
+      }
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+  tab.appendChild(tbody);
+  host.appendChild(tab);
+}
+
+/* Tabela-gêmea de um gráfico: o jeito sem cor e sem hover de ler os valores. */
+const tabelasAbertas = new Set();
+
+function alternarTabela(id) {
+  if (tabelasAbertas.has(id)) tabelasAbertas.delete(id);
+  else tabelasAbertas.add(id);
+  document.querySelector(`[data-tabela="${id}"]`)
+    .setAttribute("aria-pressed", tabelasAbertas.has(id) ? "true" : "false");
+  desenhar();
+}
+
+/** Desenha o gráfico ou, se a tabela estiver aberta, a tabela equivalente. */
+function grafico(id, cfgGrafico, colunas, linhas, desenhador) {
+  const host = document.getElementById(id);
+  if (!tabelasAbertas.has(id)) {
+    (desenhador || barras)(host, cfgGrafico);
+    return;
+  }
+  limpar(host);
+  const rolagem = document.createElement("div");
+  rolagem.className = "rolagem";
+  host.appendChild(rolagem);
+  tabela(rolagem, colunas, linhas, { campo: colunas[1].campo, desc: true });
+}
+
+/* ========================================================================
+   Página 1 — Visão Gerencial
+   ======================================================================== */
+
+const SERIES_VINCULO = [
+  { campo: "u1", nome: "Autoridades" },
+  { campo: "u2", nome: "Servidores" },
+  { campo: "u3", nome: "Terceiros" },
+  { campo: "u4", nome: "Estagiários" },
+];
+
+function desenharGerencial() {
+  const linhas = filtrar(DADOS.visaoGerencial);
+  const cores = [CORES.serie1, CORES.serie2, CORES.serie3, CORES.serie4];
+  const series = SERIES_VINCULO.map((s, i) => ({ ...s, cor: cores[i] }));
+
+  /* --- tiles de vínculo --- */
+  tiles(document.getElementById("kpis-gerencial"), [
+    { rotulo: "Total de licenças", valor: num(somar(linhas, "total")), heroi: true,
+      nota: linhas.length + (linhas.length === 1 ? " linha" : " linhas") + " no filtro atual" },
+    ...series.map((s) => ({
+      rotulo: s.nome, valor: num(somar(linhas, s.campo)), cor: s.cor,
+    })),
+  ]);
+
+  /* --- tiles por tipo de licença --- */
+  const nivelLic = filtrar(DADOS.licencasPorNivel);
+  const classes = filtrar(DADOS.classificacoes);
+  const ativas = somar(classes.filter((c) => c.classificacao === "Ativa"), "qtd");
+  const ociosas = somar(classes.filter((c) => c.classificacao === "Ociosa"), "qtd");
+  const taxa = divide(ativas, ativas + ociosas);
+  const faixaTaxa = taxa >= 0.8
+    ? { cor: CORES.bom, nome: "ok" }
+    : taxa >= 0.5 ? { cor: CORES.atencao, nome: "atenção" } : { cor: CORES.critico, nome: "crítico" };
+
+  tiles(document.getElementById("kpis-licencas"), [
+    { rotulo: "M365 E5", valor: num(somar(nivelLic, "e5")) },
+    { rotulo: "Copilot", valor: num(somar(nivelLic, "copilot")) },
+    { rotulo: "M365 F3", valor: num(somar(nivelLic, "f3")) },
+    { rotulo: "M365 F5 Security", valor: num(somar(nivelLic, "f5")) },
+    { rotulo: "Licenças premium ativas", valor: pct(taxa), cor: faixaTaxa.cor,
+      nota: faixaTaxa.nome + " · " + num(ativas) + " ativas de " + num(ativas + ociosas) },
+  ]);
+
+  /* --- gráfico: licenças por vínculo (parte-todo empilhada) --- */
+  const porUni = porUnidade(linhas, ["u1", "u2", "u3", "u4", "total", "ociosas"])
+    .sort((a, b) => b.total - a.total);
+
+  legenda(document.getElementById("leg-vinculo"), series);
+  grafico("g-vinculo", {
+    linhas: porUni.map((u) => ({
+      rotulo: u.unidade,
+      segmentos: series.map((s) => ({ nome: s.nome, valor: u[s.campo], cor: s.cor })),
+    })),
+    formato: num,
+  }, [
+    { titulo: "Unidade", campo: "unidade", tipo: "texto" },
+    { titulo: "Total", campo: "total", tipo: "num" },
+    ...SERIES_VINCULO.map((s) => ({ titulo: s.nome, campo: s.campo, tipo: "num" })),
+  ], porUni);
+
+  /* --- gráfico: ociosas (uma série só, sem legenda) --- */
+  const porOciosas = porUni.slice().sort((a, b) => b.ociosas - a.ociosas);
+  grafico("g-ociosas", {
+    linhas: porOciosas.map((u) => ({
+      rotulo: u.unidade,
+      segmentos: [{ nome: "Licenças ociosas", valor: u.ociosas, cor: CORES.serie1 }],
+    })),
+    formato: num,
+  }, [
+    { titulo: "Unidade", campo: "unidade", tipo: "texto" },
+    { titulo: "Ociosas", campo: "ociosas", tipo: "num" },
+    { titulo: "Total", campo: "total", tipo: "num" },
+  ], porOciosas);
+
+  /* --- composição: parte-todo em uma barra, com cores de estado --- */
+  desenharComposicao(classes);
+
+  /* --- tabela detalhada --- */
+  document.getElementById("sub-tab-gerencial").textContent =
+    linhas.length + " linhas. Clique no título da coluna para ordenar.";
+  tabela(document.getElementById("tab-gerencial"), [
+    { titulo: "Nível", campo: "nivel", tipo: "texto" },
+    { titulo: "Unidade", campo: "unidade", tipo: "texto" },
+    { titulo: "Subunidade", campo: "subunidade", tipo: "texto" },
+    { titulo: "Autoridades", campo: "u1", tipo: "num" },
+    { titulo: "Servidores", campo: "u2", tipo: "num" },
+    { titulo: "Terceiros", campo: "u3", tipo: "num" },
+    { titulo: "Estagiários", campo: "u4", tipo: "num" },
+    { titulo: "Total", campo: "total", tipo: "num" },
+    { titulo: "Ociosas", campo: "ociosas", tipo: "num" },
+    { titulo: "Servidores", campo: "situacao", tipo: "selo" },
+  ], linhas, { campo: "total", desc: true });
+}
+
+const ORDEM_CLASSES = [
+  { nome: "Ativa", token: "bom" },
+  { nome: "Ociosa", token: "critico" },
+  { nome: "Sem licença", token: "neutra" },
+];
+
+function desenharComposicao(classes) {
+  const host = document.getElementById("g-composicao");
+  const totais = ORDEM_CLASSES.map((c) => ({
+    nome: c.nome,
+    cor: CORES[c.token],
+    valor: somar(classes.filter((x) => x.classificacao === c.nome), "qtd"),
+  }));
+  const total = totais.reduce((t, c) => t + c.valor, 0);
+
+  barras(host, {
+    linhas: [{
+      rotulo: "Pessoas",
+      segmentos: totais,
+      fim: num(total),
+      dica: totais.map((c) => ({
+        nome: c.nome + " · " + pct(divide(c.valor, total)),
+        valor: num(c.valor),
+        cor: c.cor,
+      })),
+    }],
+    formato: num,
+    semEixo: true,
+  });
+
+  /* Rótulo direto de cada classe, com o valor — a cor nunca anda sozinha. */
+  const leg = document.createElement("div");
+  leg.className = "legenda";
+  for (const c of totais) {
+    const span = document.createElement("span");
+    const i = document.createElement("i");
+    i.style.background = c.cor;
+    const t = document.createElement("span");
+    t.textContent = `${c.nome} — ${num(c.valor)} (${pct(divide(c.valor, total))})`;
+    span.append(i, t);
+    leg.appendChild(span);
+  }
+  host.appendChild(leg);
+}
+
+/* ========================================================================
+   Página 2 — Alocação por Unidade
+   ======================================================================== */
+
+function desenharAlocacao() {
+  /* Os quatro cards replicam o CALCULATE(... Nível = "UNIDADE") das medidas
+     do modelo: olham só as linhas de nível UNIDADE e ignoram o filtro. */
+  const soUnidade = DADOS.alocacao.filter((l) => l.nivel === "UNIDADE");
+  const e5 = somar(soUnidade, "e5");
+  const terceiros = somar(soUnidade, "e5Terceiros");
+  const proporcao = divide(terceiros, e5);
+  const faixa = faixaPct(proporcao);
+
+  tiles(document.getElementById("kpis-alocacao"), [
+    { rotulo: "Custo anual E5 + Copilot", valor: moeda(somar(soUnidade, "custo")), heroi: true,
+      nota: `E5 ${moeda(DADOS.custoE5)}/ano · Copilot ${moeda(DADOS.custoCopilot)}/ano` },
+    { rotulo: "Total de E5", valor: num(e5) },
+    { rotulo: "E5 em terceiros", valor: num(terceiros) },
+    { rotulo: "% E5 em terceiros", valor: pct(proporcao), cor: faixa.cor, nota: faixa.nome },
+    { rotulo: "Copilot", valor: num(somar(soUnidade, "copilot")) },
+  ]);
+
+  /* --- gráficos (respondem ao filtro) --- */
+  const linhas = filtrar(DADOS.alocacao);
+  const porUni = porUnidade(linhas, ["e5", "e5Terceiros", "copilot", "custo", "pessoas"])
+    .map((u) => ({ ...u, outros: u.e5 - u.e5Terceiros, pct: divide(u.e5Terceiros, u.e5) }))
+    .sort((a, b) => b.e5 - a.e5);
+
+  /* Ênfase: o segmento que interessa colorido, o resto recessivo. */
+  const seriesTerceiros = [
+    { nome: "E5 em terceiros", cor: CORES.serie1 },
+    { nome: "Demais vínculos", cor: CORES.neutra },
+  ];
+  legenda(document.getElementById("leg-terceiros"), seriesTerceiros);
+
+  grafico("g-terceiros", {
+    linhas: porUni.map((u) => ({
+      rotulo: u.unidade,
+      segmentos: [
+        { nome: seriesTerceiros[0].nome, valor: u.e5Terceiros, cor: seriesTerceiros[0].cor },
+        { nome: seriesTerceiros[1].nome, valor: u.outros, cor: seriesTerceiros[1].cor },
+      ],
+      dica: [
+        { nome: "Total de E5", valor: num(u.e5) },
+        { nome: seriesTerceiros[0].nome, valor: num(u.e5Terceiros), cor: seriesTerceiros[0].cor },
+        { nome: seriesTerceiros[1].nome, valor: num(u.outros), cor: seriesTerceiros[1].cor },
+        { nome: "% em terceiros", valor: pct(u.pct) },
+      ],
+    })),
+    formato: num,
+  }, [
+    { titulo: "Unidade", campo: "unidade", tipo: "texto" },
+    { titulo: "E5 total", campo: "e5", tipo: "num" },
+    { titulo: "E5 terceiros", campo: "e5Terceiros", tipo: "num" },
+    { titulo: "Demais", campo: "outros", tipo: "num" },
+    { titulo: "%", campo: "pct", tipo: "pct" },
+  ], porUni);
+
+  /* --- % em terceiros, com faixas de estado e referências --- */
+  const porPct = porUni.slice().sort((a, b) => b.pct - a.pct);
+  grafico("g-pct", {
+    linhas: porPct.map((u) => {
+      const f = faixaPct(u.pct);
+      return {
+        rotulo: u.unidade,
+        segmentos: [{ nome: "% E5 em terceiros", valor: u.pct, cor: f.cor }],
+        fim: pct(u.pct),
+        dica: [
+          { nome: "% E5 em terceiros", valor: pct(u.pct), cor: f.cor },
+          { nome: "Situação", valor: f.nome },
+          { nome: "E5 terceiros", valor: num(u.e5Terceiros) },
+          { nome: "E5 total", valor: num(u.e5) },
+        ],
+      };
+    }),
+    formato: pct,
+    max: 1,
+    refs: [
+      { valor: DADOS.limiteAtencao, rotulo: pct(DADOS.limiteAtencao) },
+      { valor: DADOS.limiteCritico, rotulo: pct(DADOS.limiteCritico) },
+    ],
+  }, [
+    { titulo: "Unidade", campo: "unidade", tipo: "texto" },
+    { titulo: "%", campo: "pct", tipo: "pct" },
+    { titulo: "E5 terceiros", campo: "e5Terceiros", tipo: "num" },
+    { titulo: "E5 total", campo: "e5", tipo: "num" },
+  ], porPct);
+
+  /* --- tabela detalhada --- */
+  document.getElementById("sub-tab-alocacao").textContent =
+    linhas.length + " linhas. Clique no título da coluna para ordenar.";
+  tabela(document.getElementById("tab-alocacao"), [
+    { titulo: "Nível", campo: "nivel", tipo: "texto" },
+    { titulo: "Unidade", campo: "unidade", tipo: "texto" },
+    { titulo: "Subunidade", campo: "subunidade", tipo: "texto" },
+    { titulo: "E5 total", campo: "e5", tipo: "num" },
+    { titulo: "E5 terceiros", campo: "e5Terceiros", tipo: "num" },
+    { titulo: "% terceiros", campo: "pct", tipo: "pct" },
+    { titulo: "Copilot", campo: "copilot", tipo: "num" },
+    { titulo: "Custo anual", campo: "custo", tipo: "moeda" },
+    { titulo: "Conta desabilitada", campo: "desabilitada", tipo: "num" },
+    { titulo: "Situação inativo", campo: "inativo", tipo: "num" },
+    { titulo: "Situação ausente", campo: "outro", tipo: "num" },
+    { titulo: "Pessoas E5/Copilot", campo: "pessoas", tipo: "num" },
+  ], linhas, { campo: "custo", desc: true });
+}
+
+/* ========================================================================
+   Página 3 — Economia potencial
+   ======================================================================== */
+
+/* Ordem de precedência igual à do gerador: uma licença cai em um motivo só,
+   então os cenários somam sem contar a mesma licença duas vezes. */
+const MOTIVOS = [
+  { chave: "desabilitada", nome: "Conta desabilitada", token: "critico",
+    detalhe: "Conta já desligada no diretório e ainda consumindo licença. Devolução imediata." },
+  { chave: "inativo", nome: "Situação INATIVO", token: "atencao",
+    detalhe: "Pessoa marcada como inativa no cadastro funcional, com a conta ainda habilitada." },
+  { chave: "naoInformado", nome: "Situação não informada", token: "neutra",
+    detalhe: "Sem situação funcional no cadastro. Confira antes de revogar." },
+];
+
+const cenario = new Set(MOTIVOS.map((m) => m.chave));
+
+/* Os controles do cenário são montados uma vez só: recriar o DOM a cada
+   recálculo tiraria o foco do teclado no meio da interação. */
+const camposCenario = new Map();
+
+function montarCenario() {
+  if (camposCenario.size) return;
+
+  const opcoes = document.getElementById("opcoes-cenario");
+  for (const motivo of MOTIVOS) {
+    const rotulo = document.createElement("label");
+    rotulo.className = "opcao";
+
+    const marca = document.createElement("input");
+    marca.type = "checkbox";
+    marca.addEventListener("change", () => {
+      if (marca.checked) cenario.add(motivo.chave);
+      else cenario.delete(motivo.chave);
+      desenhar();
+    });
+
+    const nome = document.createElement("div");
+    nome.className = "nome";
+    const ponto = document.createElement("span");
+    ponto.className = "ponto";
+    const txt = document.createElement("span");
+    txt.textContent = motivo.nome;
+    nome.append(ponto, txt);
+
+    const detalhe = document.createElement("div");
+    detalhe.className = "detalhe";
+    detalhe.textContent = motivo.detalhe;
+
+    const cifra = document.createElement("div");
+    cifra.className = "cifra";
+
+    const corpo = document.createElement("div");
+    corpo.append(nome, detalhe, cifra);
+    rotulo.append(marca, corpo);
+    opcoes.appendChild(rotulo);
+
+    camposCenario.set(motivo.chave, { marca, ponto, cifra });
+  }
+}
+
+const custoMotivo = (linha, motivo) =>
+  linha[motivo + "E5"] * DADOS.custoE5 + linha[motivo + "Copilot"] * DADOS.custoCopilot;
+
+const licencasMotivo = (linha, motivo) => linha[motivo + "E5"] + linha[motivo + "Copilot"];
+
+function desenharEconomia() {
+  const linhas = filtrar(DADOS.economia);
+  const selecionados = MOTIVOS.filter((m) => cenario.has(m.chave));
+
+  const totalDe = (motivo, fn) => linhas.reduce((t, l) => t + fn(l, motivo), 0);
+  const economiaTotal = selecionados.reduce((t, m) => t + totalDe(m.chave, custoMotivo), 0);
+  const licencasTotal = selecionados.reduce((t, m) => t + totalDe(m.chave, licencasMotivo), 0);
+  const pessoasTotal = selecionados.reduce(
+    (t, m) => t + linhas.reduce((s, l) => s + l[m.chave + "Pessoas"], 0), 0);
+  const custoAtual = somar(filtrar(DADOS.alocacao), "custo");
+
+  montarCenario();
+  for (const motivo of MOTIVOS) {
+    const campo = camposCenario.get(motivo.chave);
+    campo.marca.checked = cenario.has(motivo.chave);
+    campo.ponto.style.background = CORES[motivo.token];
+    campo.cifra.textContent = `${moeda(totalDe(motivo.chave, custoMotivo))}/ano · `
+      + `${num(totalDe(motivo.chave, licencasMotivo))} licenças`;
+  }
+
+  /* --- tiles --- */
+  tiles(document.getElementById("kpis-economia"), [
+    { rotulo: "Economia anual no cenário", valor: moeda(economiaTotal), heroi: true,
+      nota: selecionados.length
+        ? selecionados.map((m) => m.nome.toLowerCase()).join(" + ")
+        : "nenhum motivo marcado" },
+    { rotulo: "Licenças liberadas", valor: num(licencasTotal) },
+    { rotulo: "Pessoas envolvidas", valor: num(pessoasTotal) },
+    { rotulo: "Do custo anual atual", valor: pct(divide(economiaTotal, custoAtual)),
+      nota: "custo atual " + moeda(custoAtual) },
+  ]);
+
+  document.getElementById("nota-economia").textContent =
+    "A coluna Ociosas do modelo atual conta situação INATIVO ou não informada e ignora o "
+    + "estado da conta. Aqui a conta desabilitada entra como motivo próprio e tem precedência, "
+    + "então o total pode passar do número de ociosas — a diferença é gente com conta "
+    + "desligada cuja situação funcional ainda diz ATIVO.";
+
+  /* --- economia por unidade --- */
+  const porUni = porUnidade(
+    linhas.map((l) => ({
+      unidade: l.unidade,
+      economia: selecionados.reduce((t, m) => t + custoMotivo(l, m.chave), 0),
+      licencas: selecionados.reduce((t, m) => t + licencasMotivo(l, m.chave), 0),
+      pessoas: selecionados.reduce((t, m) => t + l[m.chave + "Pessoas"], 0),
+    })),
+    ["economia", "licencas", "pessoas"]
+  ).filter((u) => u.economia > 0).sort((a, b) => b.economia - a.economia);
+
+  grafico("g-economia", {
+    linhas: porUni.map((u) => ({
+      rotulo: u.unidade,
+      segmentos: [{ nome: "Economia anual", valor: u.economia, cor: CORES.serie1 }],
+      fim: moeda(u.economia),
+      dica: [
+        { nome: "Economia anual", valor: moeda(u.economia), cor: CORES.serie1 },
+        { nome: "Licenças", valor: num(u.licencas) },
+        { nome: "Pessoas", valor: num(u.pessoas) },
+      ],
+    })),
+    formato: moeda,
+  }, [
+    { titulo: "Unidade", campo: "unidade", tipo: "texto" },
+    { titulo: "Economia anual", campo: "economia", tipo: "moeda" },
+    { titulo: "Licenças", campo: "licencas", tipo: "num" },
+    { titulo: "Pessoas", campo: "pessoas", tipo: "num" },
+  ], porUni);
+
+  /* --- licenças por motivo (mostra só o que está no cenário) --- */
+  legenda(document.getElementById("leg-motivos"),
+    selecionados.map((m) => ({ nome: m.nome, cor: CORES[m.token] })));
+
+  const campos = MOTIVOS.map((m) => m.chave + "Lic");
+  const porMotivo = porUnidade(
+    linhas.map((l) => {
+      const saida = { unidade: l.unidade };
+      for (const m of MOTIVOS) saida[m.chave + "Lic"] = licencasMotivo(l, m.chave);
+      return saida;
+    }),
+    campos
+  ).map((u) => ({
+    ...u,
+    total: selecionados.reduce((t, m) => t + u[m.chave + "Lic"], 0),
+  })).filter((u) => u.total > 0).sort((a, b) => b.total - a.total);
+
+  grafico("g-motivos", {
+    linhas: porMotivo.map((u) => ({
+      rotulo: u.unidade,
+      segmentos: selecionados.map((m) => ({
+        nome: m.nome, valor: u[m.chave + "Lic"], cor: CORES[m.token],
+      })),
+    })),
+    formato: num,
+  }, [
+    { titulo: "Unidade", campo: "unidade", tipo: "texto" },
+    { titulo: "Licenças", campo: "total", tipo: "num" },
+    ...MOTIVOS.map((m) => ({ titulo: m.nome, campo: m.chave + "Lic", tipo: "num" })),
+  ], porMotivo);
+
+  /* --- tabela de ação --- */
+  const detalhe = linhas.map((l) => {
+    const saida = {
+      nivel: l.nivel, unidade: l.unidade, subunidade: l.subunidade,
+      economia: selecionados.reduce((t, m) => t + custoMotivo(l, m.chave), 0),
+    };
+    for (const m of MOTIVOS) saida[m.chave + "Lic"] = licencasMotivo(l, m.chave);
+    return saida;
+  }).filter((l) => l.economia > 0);
+
+  document.getElementById("sub-tab-economia").textContent =
+    detalhe.length + " grupos com algo a recuperar no cenário marcado. "
+    + "Clique no título da coluna para ordenar.";
+
+  tabela(document.getElementById("tab-economia"), [
+    { titulo: "Nível", campo: "nivel", tipo: "texto" },
+    { titulo: "Unidade", campo: "unidade", tipo: "texto" },
+    { titulo: "Subunidade", campo: "subunidade", tipo: "texto" },
+    { titulo: "Economia anual", campo: "economia", tipo: "moeda" },
+    ...MOTIVOS.map((m) => ({ titulo: m.nome, campo: m.chave + "Lic", tipo: "num" })),
+  ], detalhe, { campo: "economia", desc: true });
+}
+
+/* ========================================================================
+   Página 4 — Evolução entre coletas
+   ======================================================================== */
+
+const CAMPOS_HIST = ["pessoas", "licencas", "e5", "copilot", "f3", "f5",
+                     "e5Terceiros", "ociosas", "ativas", "custo", "desperdicio"];
+
+/** Junta os níveis de cada coleta conforme o filtro, em ordem cronológica. */
+function historicoAgregado() {
+  const mapa = new Map();
+  for (const registro of filtrar(DADOS.historico)) {
+    let alvo = mapa.get(registro.data);
+    if (!alvo) {
+      alvo = { data: registro.data, rotulo: registro.rotulo, arquivo: registro.arquivo };
+      for (const c of CAMPOS_HIST) alvo[c] = 0;
+      mapa.set(registro.data, alvo);
+    }
+    for (const c of CAMPOS_HIST) alvo[c] += registro[c] || 0;
+  }
+  return [...mapa.values()].sort((a, b) => a.data.localeCompare(b.data));
+}
+
+/** Delta entre a primeira e a última coleta, já com a direção do "bom". */
+function variacao(serie, campo, subirEhBom) {
+  if (serie.length < 2) return null;
+  const inicio = serie[0][campo], fim = serie[serie.length - 1][campo];
+  const dif = fim - inicio;
+  if (!dif) return { texto: "estável desde " + serie[0].rotulo, bom: null };
+  const sinal = dif > 0 ? "+" : "−";
+  const relativo = inicio ? ` (${sinal}${Math.abs(Math.round(divide(dif, inicio) * 100))}%)` : "";
+  return {
+    texto: `${sinal}${num(Math.abs(dif))}${relativo} desde ${serie[0].rotulo}`,
+    bom: subirEhBom === null ? null : (dif > 0) === subirEhBom,
+  };
+}
+
+function desenharEvolucao() {
+  const serie = historicoAgregado();
+  const ultimo = serie[serie.length - 1] || {};
+
+  const variacaoMoeda = (campo, subirEhBom) => {
+    if (serie.length < 2) return null;
+    const dif = ultimo[campo] - serie[0][campo];
+    if (!dif) return { texto: "estável desde " + serie[0].rotulo, bom: null };
+    const sinal = dif > 0 ? "+" : "−";
+    return { texto: `${sinal}${moeda(Math.abs(dif))} desde ${serie[0].rotulo}`,
+             bom: (dif > 0) === subirEhBom };
+  };
+
+  tiles(document.getElementById("kpis-evolucao"), [
+    { rotulo: "Custo anual na última coleta", valor: moeda(ultimo.custo || 0), heroi: true,
+      delta: variacaoMoeda("custo", false) },
+    { rotulo: "Desperdício anual", valor: moeda(ultimo.desperdicio || 0),
+      delta: variacaoMoeda("desperdicio", false) },
+    { rotulo: "Licenças E5", valor: num(ultimo.e5 || 0),
+      delta: variacao(serie, "e5", null) },
+    { rotulo: "Licenças ociosas", valor: num(ultimo.ociosas || 0),
+      delta: variacao(serie, "ociosas", false) },
+  ]);
+
+  const resumoSerie = serie.length < 2
+    ? "Só uma coleta encontrada na pasta. A partir da segunda, esta página mostra a série."
+    : `${serie.length} coletas, de ${serie[0].rotulo} a ${ultimo.rotulo}. `
+      + "O relatório do Power BI lê só o arquivo mais recente — esta página usa a pasta inteira.";
+
+  /* O esquema da coleta mudou com o tempo. Sem este aviso, uma linha que cai a
+     zero no passado parece queda real de licenças, e não coluna inexistente. */
+  const lacunas = (DADOS.lacunas || []).map((l) =>
+    `${l.coluna} (${l.coletas.length} ${l.coletas.length === 1 ? "coleta" : "coletas"})`);
+
+  document.getElementById("nota-evolucao").textContent = lacunas.length
+    ? resumoSerie + " Atenção: coletas antigas não traziam todas as colunas — "
+      + lacunas.join(", ") + ". Nelas o valor aparece como zero, o que não "
+      + "significa que a licença não existia."
+    : resumoSerie;
+
+  /* --- licenças por produto --- */
+  const produtos = [
+    { chave: "e5", nome: "M365 E5", cor: CORES.serie1 },
+    { chave: "copilot", nome: "Copilot", cor: CORES.serie2 },
+    { chave: "f3", nome: "M365 F3", cor: CORES.serie3 },
+    { chave: "f5", nome: "M365 F5 Security", cor: CORES.serie4 },
+  ];
+  legenda(document.getElementById("leg-hist-lic"), produtos);
+
+  grafico("g-hist-lic", {
+    pontos: serie.map((p) => ({ rotulo: p.rotulo, valores: p })),
+    series: produtos,
+    formato: num,
+  }, [
+    { titulo: "Coleta", campo: "rotulo", tipo: "texto" },
+    ...produtos.map((p) => ({ titulo: p.nome, campo: p.chave, tipo: "num" })),
+  ], serie, linhaTempo);
+
+  /* --- custo x desperdício --- */
+  const financeiro = [
+    { chave: "custo", nome: "Custo anual", cor: CORES.serie1 },
+    { chave: "desperdicio", nome: "Desperdício anual", cor: CORES.serie4 },
+  ];
+  legenda(document.getElementById("leg-hist-custo"), financeiro);
+
+  grafico("g-hist-custo", {
+    pontos: serie.map((p) => ({ rotulo: p.rotulo, valores: p })),
+    series: financeiro,
+    formato: moeda,
+    curto: (v) => "R$ " + (v >= 1000 ? Math.round(v / 1000) + "k" : Math.round(v)),
+  }, [
+    { titulo: "Coleta", campo: "rotulo", tipo: "texto" },
+    { titulo: "Custo anual", campo: "custo", tipo: "moeda" },
+    { titulo: "Desperdício anual", campo: "desperdicio", tipo: "moeda" },
+  ], serie, linhaTempo);
+
+  /* --- tabela de coletas --- */
+  document.getElementById("sub-tab-evolucao").textContent =
+    serie.length + " coletas lidas da pasta.";
+  tabela(document.getElementById("tab-evolucao"), [
+    { titulo: "Coleta", campo: "rotulo", tipo: "texto" },
+    { titulo: "Arquivo", campo: "arquivo", tipo: "texto" },
+    { titulo: "Pessoas", campo: "pessoas", tipo: "num" },
+    { titulo: "Licenças", campo: "licencas", tipo: "num" },
+    { titulo: "E5", campo: "e5", tipo: "num" },
+    { titulo: "Copilot", campo: "copilot", tipo: "num" },
+    { titulo: "E5 terceiros", campo: "e5Terceiros", tipo: "num" },
+    { titulo: "Ativas", campo: "ativas", tipo: "num" },
+    { titulo: "Ociosas", campo: "ociosas", tipo: "num" },
+    { titulo: "Custo anual", campo: "custo", tipo: "moeda" },
+    { titulo: "Desperdício", campo: "desperdicio", tipo: "moeda" },
+  ], serie, { campo: "data", desc: false });
+}
+
+/* ========================================================================
+   Página 5 — Terceiros e fornecedores
+   ======================================================================== */
+
+function desenharFornecedores() {
+  /* Junta os níveis: cada pessoa aparece em um nível só, então não duplica. */
+  const campos = ["pessoas", "e5", "copilot", "f3", "f5",
+                  "desabilitada", "inativo", "ativo", "semSituacao", "custo"];
+  const mapa = new Map();
+  for (const registro of filtrar(DADOS.fornecedores)) {
+    let alvo = mapa.get(registro.empresa);
+    if (!alvo) {
+      alvo = { empresa: registro.empresa, _unidades: new Set() };
+      for (const c of campos) alvo[c] = 0;
+      mapa.set(registro.empresa, alvo);
+    }
+    for (const c of campos) alvo[c] += registro[c] || 0;
+    for (const unidade of registro.unidades) alvo._unidades.add(unidade);
+  }
+  const empresas = [...mapa.values()]
+    .map((e) => ({ ...e, unidades: e._unidades.size }))
+    .sort((a, b) => b.custo - a.custo);
+
+  tiles(document.getElementById("kpis-fornecedores"), [
+    { rotulo: "Custo anual com terceiros", valor: moeda(somar(empresas, "custo")), heroi: true,
+      nota: empresas.length + (empresas.length === 1 ? " empresa" : " empresas") + " no filtro atual" },
+    { rotulo: "Pessoas terceirizadas", valor: num(somar(empresas, "pessoas")) },
+    { rotulo: "Licenças E5", valor: num(somar(empresas, "e5")) },
+    { rotulo: "Com conta desabilitada", valor: num(somar(empresas, "desabilitada")),
+      cor: CORES.critico, nota: "licença ativa para conta desligada" },
+  ]);
+
+  /* --- custo por empresa --- */
+  grafico("g-forn-custo", {
+    linhas: empresas.map((e) => ({
+      rotulo: e.empresa,
+      segmentos: [{ nome: "Custo anual", valor: e.custo, cor: CORES.serie1 }],
+      fim: moeda(e.custo),
+      dica: [
+        { nome: "Custo anual", valor: moeda(e.custo), cor: CORES.serie1 },
+        { nome: "E5", valor: num(e.e5) },
+        { nome: "Copilot", valor: num(e.copilot) },
+        { nome: "Pessoas", valor: num(e.pessoas) },
+        { nome: "Unidades atendidas", valor: num(e.unidades) },
+      ],
+    })),
+    formato: moeda,
+  }, [
+    { titulo: "Empresa", campo: "empresa", tipo: "texto" },
+    { titulo: "Custo anual", campo: "custo", tipo: "moeda" },
+    { titulo: "E5", campo: "e5", tipo: "num" },
+    { titulo: "Copilot", campo: "copilot", tipo: "num" },
+  ], empresas);
+
+  /* --- situação das pessoas: aqui a cor significa estado, não identidade --- */
+  /* Os quatro baldes são exclusivos e cobrem todo mundo, então a barra
+     empilhada fecha no total de pessoas da empresa. */
+  const situacoes = [
+    { campo: "ativo", nome: "Ativo", cor: CORES.bom },
+    { campo: "inativo", nome: "Inativo", cor: CORES.atencao },
+    { campo: "desabilitada", nome: "Conta desabilitada", cor: CORES.critico },
+    { campo: "semSituacao", nome: "Sem situação", cor: CORES.neutra },
+  ];
+  legenda(document.getElementById("leg-forn-sit"), situacoes);
+
+  const porSituacao = empresas.slice().sort(
+    (a, b) => (b.desabilitada + b.inativo) - (a.desabilitada + a.inativo));
+
+  grafico("g-forn-sit", {
+    linhas: porSituacao.map((e) => ({
+      rotulo: e.empresa,
+      segmentos: situacoes.map((s) => ({ nome: s.nome, valor: e[s.campo], cor: s.cor })),
+    })),
+    formato: num,
+  }, [
+    { titulo: "Empresa", campo: "empresa", tipo: "texto" },
+    { titulo: "Pessoas", campo: "pessoas", tipo: "num" },
+    ...situacoes.map((s) => ({ titulo: s.nome, campo: s.campo, tipo: "num" })),
+  ], porSituacao);
+
+  /* --- tabela --- */
+  document.getElementById("sub-tab-fornecedores").textContent =
+    empresas.length + " empresas. Clique no título da coluna para ordenar.";
+  tabela(document.getElementById("tab-fornecedores"), [
+    { titulo: "Empresa", campo: "empresa", tipo: "texto" },
+    { titulo: "Pessoas", campo: "pessoas", tipo: "num" },
+    { titulo: "Unidades", campo: "unidades", tipo: "num" },
+    { titulo: "E5", campo: "e5", tipo: "num" },
+    { titulo: "Copilot", campo: "copilot", tipo: "num" },
+    { titulo: "F3", campo: "f3", tipo: "num" },
+    { titulo: "F5 Security", campo: "f5", tipo: "num" },
+    { titulo: "Custo anual", campo: "custo", tipo: "moeda" },
+    ...situacoes.map((s) => ({ titulo: s.nome, campo: s.campo, tipo: "num" })),
+  ], empresas, { campo: "custo", desc: true });
+}
+
+/* ========================================================================
+   Orquestração
+   ======================================================================== */
+
+const PAGINAS = {
+  gerencial: desenharGerencial,
+  alocacao: desenharAlocacao,
+  economia: desenharEconomia,
+  evolucao: desenharEvolucao,
+  fornecedores: desenharFornecedores,
+};
+
+function desenhar() {
+  recarregarCores();
+  for (const nome of Object.keys(PAGINAS)) {
+    document.getElementById("pag-" + nome).hidden = estado.pagina !== nome;
+  }
+  PAGINAS[estado.pagina]();
+}
+
+function ligarControles() {
+  document.getElementById("abas").addEventListener("click", (e) => {
+    const botao = e.target.closest("[data-pagina]");
+    if (!botao) return;
+    estado.pagina = botao.dataset.pagina;
+    for (const b of e.currentTarget.children) {
+      b.setAttribute("aria-selected", String(b === botao));
+    }
+    desenhar();
+  });
+
+  document.getElementById("filtro-nivel").addEventListener("click", (e) => {
+    const botao = e.target.closest("[data-nivel]");
+    if (!botao) return;
+    estado.nivel = botao.dataset.nivel;
+    for (const b of e.currentTarget.children) {
+      b.setAttribute("aria-pressed", String(b === botao));
+    }
+    desenhar();
+  });
+
+  for (const botao of document.querySelectorAll("[data-tabela]")) {
+    botao.addEventListener("click", () => alternarTabela(botao.dataset.tabela));
+  }
+
+  const btnTema = document.getElementById("btn-tema");
+  btnTema.addEventListener("click", () => {
+    const escuro = document.documentElement.dataset.theme === "dark"
+      || (!document.documentElement.dataset.theme
+          && matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.dataset.theme = escuro ? "light" : "dark";
+    atualizarBotaoTema();
+    desenhar();
+  });
+  atualizarBotaoTema();
+
+  /* Re-renderiza quando a largura muda, mantendo o quadro no lugar. */
+  let pendente;
+  addEventListener("resize", () => {
+    clearTimeout(pendente);
+    pendente = setTimeout(desenhar, 120);
+  });
+}
+
+function atualizarBotaoTema() {
+  const escuro = document.documentElement.dataset.theme === "dark"
+    || (!document.documentElement.dataset.theme
+        && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.getElementById("btn-tema").textContent = escuro ? "Tema claro" : "Tema escuro";
+}
+
+function cabecalho() {
+  document.getElementById("meta").textContent =
+    `Coleta de ${DADOS.dataColeta} · ${num(DADOS.totalLinhas)} pessoas no CSV`;
+  document.getElementById("rodape-fonte").textContent =
+    `Gerado em ${DADOS.geradoEm} a partir de ${DADOS.arquivoFonte}.`;
+
+  document.getElementById("rodape-modo").textContent = DADOS.modo === "externo"
+    ? "Os números vêm do dados.json ao lado desta página e refletem a última vez "
+      + "que o gerador rodou no servidor."
+    : "Este arquivo é um retrato do CSV no momento da geração e funciona offline, "
+      + "sem servidor.";
+}
+
+/* ========================================================================
+   Partida
+   ======================================================================== */
+
+/** Mensagem legível quando o dados.json não vem — some o dashboard inteiro. */
+function mostrarFalha(erro, origem) {
+  const aviso = document.createElement("div");
+  aviso.className = "cartao";
+  aviso.style.marginTop = "16px";
+
+  const titulo = document.createElement("h2");
+  titulo.textContent = "Não consegui carregar os dados";
+
+  const detalhe = document.createElement("p");
+  detalhe.className = "sub";
+  detalhe.textContent = `Tentei buscar ${origem} e falhou: ${erro.message}.`;
+
+  const dica = document.createElement("p");
+  dica.className = "sub";
+  dica.textContent = location.protocol === "file:"
+    ? "Esta página está aberta direto do disco (file://), e o navegador bloqueia a "
+      + "leitura de arquivos vizinhos. Publique a pasta num servidor web, ou gere o "
+      + "dashboard no modo embutido, que não depende de arquivo externo."
+    : "Confira se o dados.json está na mesma pasta do dashboard.html no servidor e "
+      + "se o servidor o entrega como application/json.";
+
+  aviso.append(titulo, detalhe, dica);
+  document.querySelector(".controles").after(aviso);
+  for (const pagina of document.querySelectorAll(".pagina")) pagina.hidden = true;
+}
+
+async function iniciar() {
+  if (!DADOS) {
+    /* O parâmetro evita que o Teams e o navegador sirvam um JSON velho —
+       é o que separa "sempre atualizado" de "atualizado quando der". */
+    const origem = "dados.json?v=" + Date.now();
+    try {
+      const resposta = await fetch(origem, { cache: "no-store" });
+      if (!resposta.ok) throw new Error("HTTP " + resposta.status);
+      DADOS = await resposta.json();
+    } catch (erro) {
+      mostrarFalha(erro, "dados.json");
+      return;
+    }
+  }
+  cabecalho();
+  ligarControles();
+  desenhar();
+}
+
+iniciar();
+</script>
+</body>
+</html>

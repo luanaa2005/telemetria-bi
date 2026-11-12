@@ -2,3 +2,10 @@
 **/.pbi/cache.abf
 **/.pbi/localSettings.json
 **/.pbi/editorSettings.json
+
+# Saída gerada pelo web/gerar_dashboard.py — refeita a cada coleta
+web/dashboard.html
+web/dados.json
+web/_demo_servidor/
+web/_preview_*.html
+web/__pycache__/
